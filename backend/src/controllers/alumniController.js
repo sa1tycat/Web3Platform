@@ -35,8 +35,25 @@ const viewBadges = async (req, res) => {
   }
 };
 
+// 参加活动
+const joinActivity = async (req, res) => {
+  try {
+    const { userID, activityID } = req.body;
+    const result = await userService.joinActivity(userID, activityID);
+
+    if (result) {
+      res.json({ registered: true, message: 'Successfully registered for the activity' });
+    } else {
+      res.json({ registered: false, message: 'Failed to register for the activity' });
+    }
+  } catch (error) {
+    res.status(500).json({ registered: false, message: 'Internal server error' });
+  }
+};
+
 
 module.exports = {
   bindStudentId,
   viewBadges,
+  joinActivity,
 };

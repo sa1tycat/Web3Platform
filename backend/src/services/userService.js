@@ -20,7 +20,19 @@ const viewBadges = async (userID) => {
   }
 };
 
+// 参加活动
+const joinActivity = async (userID, activityID) => {
+  try {
+    return await userModel.joinActivity(userID, activityID);
+  } catch (error) {
+    console.error('Error in userService.joinActivity:', error);
+    throw error;
+  }
+};
+
+
 module.exports = {
   bindStudentId,
   viewBadges,
+  joinActivity,
 };

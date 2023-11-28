@@ -8,4 +8,7 @@ router.post('/bind-student-id', alumniController.bindStudentId);
 // GET方法查看获得徽章路由
 router.get('/view-badges', alumniController.viewBadges);
 
+// POST方法参加活动路由
+router.post('/join-activity', alumniController.joinActivity);
+
 module.exports = router;

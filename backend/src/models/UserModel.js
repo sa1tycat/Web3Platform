@@ -38,7 +38,23 @@ const viewBadges = async (userID) => {
   }
 };
 
+// 参加活动
+const joinActivity = async (userID, activityID) => {
+  try {
+    const [result] = await db.query(
+      'INSERT INTO UserActivities (UserID, ActivityID) VALUES (?, ?)',
+      [userID, activityID]
+    );
+
+    return result.affectedRows > 0;
+  } catch (error) {
+    console.error('Error in UserModel.joinActivity:', error);
+    throw error;
+  }
+};
+
 module.exports = {
   bindStudentId,
   viewBadges,
+  joinActivity,
 };
