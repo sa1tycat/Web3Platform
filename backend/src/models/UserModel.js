@@ -16,6 +16,29 @@ const bindStudentId = async (DID, studentID) => {
   }
 };
 
+// 查看获得徽章
+const viewBadges = async (userID) => {
+  try {
+    const query = `
+      SELECT 
+        b.*, ub.AcquiredAt, a.Name AS ActivityName, a.Description AS ActivityDescription 
+      FROM 
+        UserBadges ub
+        INNER JOIN Badges b ON ub.BadgeID = b.BadgeID
+        LEFT JOIN Activities a ON b.ActivityID = a.ActivityID
+      WHERE 
+        ub.UserID = ?
+    `;
+
+    const [badges] = await db.query(query, [userID]);
+    return badges;
+  } catch (error) {
+    console.error('Error in UserModel.viewBadges:', error);
+    throw error;
+  }
+};
+
 module.exports = {
   bindStudentId,
+  viewBadges,
 };
