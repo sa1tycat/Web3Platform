@@ -1,6 +1,6 @@
 const userModel = require("../models/UserModel");
 
-// 绑定 DID 到学号
+// 绑定DID到学号
 const bindStudentId = async (DID, studentID) => {
   try {
     return await userModel.bindStudentId(DID, studentID);

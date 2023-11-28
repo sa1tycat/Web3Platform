@@ -1,6 +1,6 @@
 const userService = require("../services/userService");
 
-// 绑定 DID 到学号
+// 绑定DID到学号
 const bindStudentId = async (req, res) => {
   try {
     const { DID, studentID } = req.body;
