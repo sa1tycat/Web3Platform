@@ -21,6 +21,23 @@ const viewActivity = async (activityID) => {
   }
 };
 
+// 创建活动
+const createActivity = async (activityInfo) => {
+  try {
+    const result = await db.query(
+      'INSERT INTO Activities (Name, Description, StartTime, EndTime) VALUES (?, ?, ?, ?)',
+      [activityInfo.name, activityInfo.description, activityInfo.startTime, activityInfo.endTime]
+    );
+
+    return result;
+  } catch (error) {
+    console.error('Error in ActivityModel.createActivity:', error);
+    throw error;
+  }
+};
+
+
 module.exports = {
   viewActivity,
+  createActivity,
 };

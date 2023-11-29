@@ -2,6 +2,7 @@ const express = require('express'); // 引入express模块
 const app = express();
 const alumniRoutes = require('./src/api/alumniRoutes');
 const activityRoutes = require('./src/api/activityRoutes');
+const adminRoutes = require('./src/api/adminRoutes');
 require('dotenv').config(); // 加载环境变量
 
 app.use(express.json()); // 用于解析JSON格式的请求体
@@ -16,6 +17,9 @@ app.use('/api/alumni', alumniRoutes);
 
 // 活动相关路由
 app.use('/api/activity', activityRoutes);
+
+// 管理员相关路由
+app.use('/api/admin', adminRoutes);
 
 // 错误处理
 app.use((err, req, res, next) => {
