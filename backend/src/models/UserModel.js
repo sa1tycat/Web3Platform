@@ -1,5 +1,18 @@
 const db = require("./db");
 
+// 根据ID查找用户
+const getUserNameByID = async (connection, userID) => {
+  const [rows] = await connection.query(
+    'SELECT Name FROM Users WHERE UserID = ?',
+    [userID]
+  );
+  if (rows.length > 0) {
+    return rows[0].Name; // 返回找到的用户姓名
+  } else {
+    return null; // 如果没有找到用户，返回null
+  }
+};
+
 // 绑定DID到学号
 const bindStudentId = async (DID, studentID) => {
   try {
@@ -54,6 +67,7 @@ const joinActivity = async (userID, activityID) => {
 };
 
 module.exports = {
+  getUserNameByID,
   bindStudentId,
   viewBadges,
   joinActivity,

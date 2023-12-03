@@ -16,6 +16,18 @@ const createActivity = async (req, res) => {
   }
 };
 
+// 创建和分发徽章
+const createAndDistributeBadges = async (req, res) => {
+  try {
+    const { activityID, badges } = req.body;
+    const result = await adminService.createAndDistributeBadges(activityID, badges);
+    res.json(result);
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
 module.exports = {
   createActivity,
+  createAndDistributeBadges,
 };
