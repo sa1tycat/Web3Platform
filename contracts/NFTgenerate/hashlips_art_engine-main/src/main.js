@@ -31,6 +31,8 @@ var dnaList = new Set();
 const DNA_DELIMITER = "-";
 const HashlipsGiffer = require(`${basePath}/modules/HashlipsGiffer.js`);
 
+// 用于存储首字母的变量
+let layervaluename = '';
 let hashlipsGiffer = null;
 
 const buildSetup = () => {
@@ -179,6 +181,7 @@ const addAttributes = (_element) => {
   });
 };
 
+// 这个函数的目标是加载一个图层的图片，并在加载完成后返回一个对象。
 const loadLayerImg = async (_layer) => {
   try {
     return new Promise(async (resolve) => {
@@ -346,9 +349,6 @@ const startCreating = async () => {
   ) {
     abstractedIndexes.push(i);
   }
-  if (shuffleLayerConfigurations) {
-    abstractedIndexes = shuffle(abstractedIndexes);
-  }
   debugLogs
     ? console.log("Editions left to create: ", abstractedIndexes)
     : null;
@@ -401,9 +401,14 @@ const startCreating = async () => {
           debugLogs
             ? console.log("Editions left to create: ", abstractedIndexes)
             : null;
-          saveImage(abstractedIndexes[0]);
-          addMetadata(newDna, abstractedIndexes[0]);
-          saveMetaDataSingleFile(abstractedIndexes[0]);
+          renderObjectArray.forEach((renderObject) => {
+            let selectedElement = renderObject.layer.selectedElement;
+            layervaluename += selectedElement.name[0];
+          });
+          saveImage(layervaluename);
+          addMetadata(newDna, layervaluename);
+          saveMetaDataSingleFile(layervaluename);
+          layervaluename = '';
           console.log(
             `Created edition: ${abstractedIndexes[0]}, with DNA: ${sha1(
               newDna
@@ -412,7 +417,7 @@ const startCreating = async () => {
         });
         dnaList.add(filterDNAOptions(newDna));
         editionCount++;
-        abstractedIndexes.shift();
+        abstractedIndexes.shift();// Delete the first value
       } else {
         console.log("DNA exists!");
         failedCount++;
