@@ -26,11 +26,14 @@ const layerConfigurations = [
 ];
 ```
 ```growEditionSizeTo```：一次性生成的图片个数
+
 ```layersOrder```:图层名称及图层顺序
+
 3. 运行
 ```sh
 npm run build
 ```
+
 4. 生成的图片和metadata在```build```文件夹
 
 
