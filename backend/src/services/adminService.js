@@ -1,3 +1,4 @@
+const fileService = require('./fileService');
 const activityModel = require('../models/ActivityModel');
 const BadgeModel = require('../models/BadgeModel');
 const UserModel = require('../models/UserModel');
@@ -73,8 +74,9 @@ const createBadges = async (activityID, badges) => {
     // TODO: const metadataURI = await IPFSService.uploadToIPFS(metadata);
     
     // TODO: 实现文件存储服务
-    // 下面是测试数据
-    const metadataURI = "http://localhost:3000/files/test.json"
+    const metadataFilePath = await fileService.storeMetadata(metadata, 'metadata-' + badge.userID + '.json');
+    console.log('metadataFilePath', metadataFilePath);
+    const metadataURI = 'http://localhost:3000/' + metadataFilePath;
     
     // 记录徽章分发信息
     badgesCreation.push({
