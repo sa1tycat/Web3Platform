@@ -10,10 +10,8 @@ const {
   baseUri,
   description,
   background,
-  uniqueDnaTorrance,
   layerConfigurations,
   rarityDelimiter,
-  shuffleLayerConfigurations,
   debugLogs,
   extraMetadata,
   text,
@@ -29,7 +27,6 @@ const ctx = canvas.getContext("2d");
 ctx.imageSmoothingEnabled = format.smoothing;
 var metadataList = [];
 var attributesList = [];
-var dnaList = new Set();
 const DNA_DELIMITER = "-";
 const HashlipsGiffer = require(`${basePath}/modules/HashlipsGiffer.js`);
 // DNA配置字符串，每个字符代表一个位置可能的字符数量
