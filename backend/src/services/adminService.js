@@ -73,7 +73,7 @@ const createBadges = async (activityID, badges) => {
     // 上传到 IPFS
     // TODO: const metadataURI = await IPFSService.uploadToIPFS(metadata);
     
-    // TODO: 实现文件存储服务
+    // 测试实现，实际需要上传到 IPFS
     const metadataFilePath = await fileService.storeMetadata(metadata, 'metadata-' + badge.userID + '.json');
     console.log('metadataFilePath', metadataFilePath);
     const metadataURI = 'http://localhost:3000/' + metadataFilePath;
