@@ -67,7 +67,8 @@ const createBadges = async (activityID, badges) => {
     // 查找预生成的 Metadata
     const metadata = await findMetadata(badge.badgeInfo);
     // 插入活动名字字段
-    metadata.activity = activityModel.findActivityByID(activityID);
+    const activity = await activityModel.findActivityByID(activityID); // 获得活动信息
+    metadata.activity = activity.Name; // 再活动字段插入活动名字
     // 修改 Metadata 字段
     modifyMetadata(metadata, badge.badgeInfo);
     // 上传到 IPFS
