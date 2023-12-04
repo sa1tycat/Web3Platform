@@ -36,8 +36,27 @@ const createActivity = async (activityInfo) => {
   }
 };
 
+// 根据 ID 查找活动
+const findActivityByID = async (activityID) => {
+  try {
+    const [rows] = await db.query(
+      'SELECT * FROM Activities WHERE ActivityID = ?',
+      [activityID]
+    );
+    if (rows.length > 0) {
+      return rows[0]; // 返回找到的活动信息
+    } else {
+      return null; // 如果没有找到活动，返回 null
+    }
+  } catch (error) {
+    console.error('Error in ActivityModel.findActivityByID:', error);
+    throw error;
+  }
+};
+
 
 module.exports = {
   viewActivity,
   createActivity,
+  findActivityByID,
 };
