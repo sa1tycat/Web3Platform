@@ -66,9 +66,19 @@ const joinActivity = async (userID, activityID) => {
   }
 };
 
+// 根据活动 ID 查找用户
+const findUsersByActivityID = async (activityID) => {
+  const [users] = await db.query(
+    'SELECT u.UserID, u.Name, u.StudentID, u.DID FROM Users u JOIN UserActivities ua ON u.UserID = ua.UserID WHERE ua.ActivityID = ?',
+    [activityID]
+  );
+  return users;
+};
+
 module.exports = {
   getUserNameByID,
   bindStudentId,
   viewBadges,
   joinActivity,
+  findUsersByActivityID,
 };

@@ -14,6 +14,13 @@ const createActivity = async (activityInfo) => {
   }
 };
 
+// 查看活动参与者
+const getActivityParticipants = async (activityID) => {
+  // 逻辑来获取特定活动的参与者
+  const participants = await UserModel.findUsersByActivityID(activityID);
+  return participants;
+};
+
 // TODO: 实现 findMetadata 正确功能
 // 注意：当前只是测试代码，实际应用中需要修改
 const findMetadata = async (badge) => {
@@ -94,5 +101,6 @@ const createBadges = async (activityID, badges) => {
 
 module.exports = {
   createActivity,
+  getActivityParticipants,
   createBadges,
 };

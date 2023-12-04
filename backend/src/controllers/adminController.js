@@ -16,6 +16,22 @@ const createActivity = async (req, res) => {
   }
 };
 
+// 查看活动参与者
+const viewActivityParticipants = async (req, res) => {
+  try {
+    const activityID = parseInt(req.query.activityID);
+    const participants = await adminService.getActivityParticipants(activityID);
+
+    res.json({
+      success: true,
+      users: participants,
+      message: 'Participants retrieved successfully'
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
 // 创建徽章
 const createBadges = async (req, res) => {
   try {
@@ -30,4 +46,5 @@ const createBadges = async (req, res) => {
 module.exports = {
   createActivity,
   createBadges,
+  viewActivityParticipants,
 };
