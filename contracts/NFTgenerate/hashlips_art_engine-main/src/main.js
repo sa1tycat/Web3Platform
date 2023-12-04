@@ -19,7 +19,9 @@ const {
   text,
   namePrefix,
   network,
+  imageNames,
   solanaMetadata,
+  configMapping,
   gif,
 } = require(`${basePath}/src/config.js`);
 const canvas = createCanvas(format.width, format.height);
@@ -30,6 +32,15 @@ var attributesList = [];
 var dnaList = new Set();
 const DNA_DELIMITER = "-";
 const HashlipsGiffer = require(`${basePath}/modules/HashlipsGiffer.js`);
+// DNA配置字符串，每个字符代表一个位置可能的字符数量
+const dnaConfig = "ABCCACC";
+// 映射配置字符串中的每个字符到可能的字符数组
+// 字母到数字的映射规则
+const letterToNumber = (letter) => letter.charCodeAt(0) - 'A'.charCodeAt(0);
+
+
+// 存储所有可能的 DNA 组合
+let dnaList1 = [];
 
 // 用于存储首字母的变量
 let layervaluename = '';
@@ -282,6 +293,7 @@ const isDnaUnique = (_DnaList = new Set(), _dna = "") => {
   return !_DnaList.has(_filteredDNA);
 };
 
+// 这个函数负责随机出
 const createDna = (_layers) => {
   let randNum = [];
   _layers.forEach((layer) => {
@@ -337,11 +349,70 @@ function shuffle(array) {
   return array;
 }
 
+function generateDnaCombinations(dnaConfig, index, currentCombination, allCombinations, configMapping) {
+  if (index === dnaConfig.length) {
+    // 当前组合已经达到了配置字符串的长度，将其添加到所有组合的数组中
+    allCombinations.push(currentCombination);
+    return;
+  }
+
+  // 获取当前位置可能的字符数组
+  const possibleChars = configMapping[dnaConfig[index]];
+
+  // 遍历当前位置的每个可能字符
+  for (let char of possibleChars) {
+    // 递归地生成剩余组合
+    generateDnaCombinations(dnaConfig, index + 1, currentCombination + char, allCombinations, configMapping);
+  }
+}
+
+// 模拟从文件夹中获取图片名称的函数
+function getImageNameForLayer(layerName, dnaChar) {
+  // 根据层名称和DNA字符获取图片名称
+  const images = imageNames[layerName];
+  return images[dnaChar] || null;
+}
+
+// 根据DNA序列生成图片名称字符串的函数
+function generateImageNameFromDNA(dna) {
+  // 检查DNA长度是否与层的数量匹配
+  if (dna.length !== layerConfigurations[0].layersOrder.length) {
+    throw new Error('DNA length does not match the number of layers');
+  }
+
+  // 生成图片名称数组
+  const imageNames = layerConfigurations[0].layersOrder.map((layer, index) => {
+    const dnaChar = dna[index];
+    return getImageNameForLayer(layer.name, dnaChar);
+  });
+  // 过滤掉任何未找到的图片并生成最终的字符串
+  return imageNames.filter(name => name !== null).join('-');
+}
+
+// 更新DNA字符串
+function updateDna(dnaString) {
+  // 将dna字符串分割成单独的图片名称部分
+  const parts = dnaString.split('-');
+
+  // 对每个部分应用映射规则
+  const updatedParts = parts.map((part) => {
+    // 找到每个部分中的首字母
+    const letter = part[0];
+    // 将首字母映射到数字
+    const number = letterToNumber(letter);
+    // 替换首字母并构建新的字符串部分
+    return `${number}:${part}`;
+  });
+
+  // 重新组合字符串部分
+  return updatedParts.join('-');
+}
+
 const startCreating = async () => {
   let layerConfigIndex = 0;
   let editionCount = 1;
-  let failedCount = 0;
   let abstractedIndexes = [];
+  generateDnaCombinations(dnaConfig, 0, '', dnaList1, configMapping);//生成所有的dna
   for (
     let i = network == NETWORK.sol ? 0 : 1;
     i <= layerConfigurations[layerConfigurations.length - 1].growEditionSizeTo;
@@ -359,13 +430,13 @@ const startCreating = async () => {
     while (
       editionCount <= layerConfigurations[layerConfigIndex].growEditionSizeTo
     ) {
-      let newDna = createDna(layers);
-      if (isDnaUnique(dnaList, newDna)) {
+      let newDna = updateDna(generateImageNameFromDNA(dnaList1[0])); // 可读性拉满啦^-^;
+      if (1) {
         let results = constructLayerToDna(newDna, layers);
         let loadedElements = [];
-
         results.forEach((layer) => {
           loadedElements.push(loadLayerImg(layer));
+
         });
 
         await Promise.all(loadedElements).then((renderObjectArray) => {
@@ -415,18 +486,9 @@ const startCreating = async () => {
             )}`
           );
         });
-        dnaList.add(filterDNAOptions(newDna));
+        dnaList1.shift();
         editionCount++;
         abstractedIndexes.shift();// Delete the first value
-      } else {
-        console.log("DNA exists!");
-        failedCount++;
-        if (failedCount >= uniqueDnaTorrance) {
-          console.log(
-            `You need more layers or elements to grow your edition to ${layerConfigurations[layerConfigIndex].growEditionSizeTo} artworks!`
-          );
-          process.exit();
-        }
       }
     }
     layerConfigIndex++;
