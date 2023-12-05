@@ -85,10 +85,20 @@ const createBadges = async (activityID, badges) => {
     const metadataFilePath = await fileService.storeMetadata(metadata, 'metadata-' + badge.userID + '.json');
     console.log('metadataFilePath', metadataFilePath);
     const metadataURI = 'http://localhost:3000/' + metadataFilePath;
+
+    // 数据库中临时记录徽章
+    const badgeID = await BadgeModel.createTempBagdge({
+      activityID,
+      title: badge.badgeInfo.title,
+      description: badge.badgeInfo.description,
+      imageURL: badge.badgeInfo.image,
+      metadataURI
+    });
     
     // 记录徽章分发信息
     badgesCreation.push({
       userID: badge.userID,
+      badgeID,
       badgeMetadataURI: metadataURI
     });
   }
