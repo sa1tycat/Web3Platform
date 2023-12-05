@@ -43,6 +43,7 @@ const createBadges = async (req, res) => {
   }
 };
 
+// 更新徽章 tokenID
 const updateBadgeTkID = async (req, res) => {
   try {
     const { badges } = req.body;
@@ -51,11 +52,23 @@ const updateBadgeTkID = async (req, res) => {
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }
-}
+};
+
+// 颁发徽章
+const distributeBadges = async (req, res) => {
+  try {
+    const { distributions } = req.body;
+    const result = await adminService.distributeBadges(distributions);
+    res.json(result);
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
 
 module.exports = {
   createActivity,
   createBadges,
   viewActivityParticipants,
   updateBadgeTkID,
+  distributeBadges,
 };

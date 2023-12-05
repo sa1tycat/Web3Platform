@@ -36,6 +36,26 @@ const updateBadgeTkID = async (badge) => {
   }
 };
 
+// 颁发徽章
+const distributeBadge = async (distribution) => {
+  try {
+    const { userID, badgeID } = distribution;
+    const [result] = await db.query(
+      'INSERT INTO UserBadges (UserID, BadgeID) VALUES (?, ?)',
+      [userID, badgeID]
+    );
+
+    // 检查是否有行受影响
+    if (result.affectedRows === 0) {
+      return { success: false, userID, badgeID, message: "No badge found with the given ID" };
+    }
+
+    return { success: true, userID, badgeID, message: "Badge distributed successfully" };
+  } catch (error) {
+    console.error('Error in BadgeModel.distributeBadge:', error);
+    throw error;
+  }
+};
 
 // 创建徽章（这个函数暂时不用了）
 const createBadge = async (connection, badgeData) => {
@@ -58,4 +78,5 @@ module.exports = {
   createBadge,
   createTempBagdge,
   updateBadgeTkID,
+  distributeBadge,
 };

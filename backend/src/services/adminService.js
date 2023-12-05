@@ -138,10 +138,39 @@ const updateBadgeTkID = async (badges) => {
   }
 };
 
+// 颁发徽章
+const distributeBadges = async (distributions) => {
+  try {
+    let badgesDistribution = [];
+    let allDistributed = true; // 用于跟踪所有徽章是否都颁发成功
+
+    for (const distribution of distributions) {
+      const result = await BadgeModel.distributeBadge(distribution);
+      badgesDistribution.push(result);
+
+      if (!result.success) {
+        allDistributed = false; // 如果任何徽章颁发失败，将此标志设为false
+      }
+    }
+
+    return {
+      success: allDistributed,
+      message: allDistributed ? 'Badges distributed successfully' : 'Some badges failed to distribute',
+      badgesDistribution,
+    };
+  } catch (error) {
+    return {
+      success: false,
+      message: 'Failed to distribute badges',
+      error: error.message,
+    };
+  }
+}
 
 module.exports = {
   createActivity,
   getActivityParticipants,
   createBadges,
   updateBadgeTkID,
+  distributeBadges,
 };
