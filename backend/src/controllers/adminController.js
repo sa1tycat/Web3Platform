@@ -43,8 +43,19 @@ const createBadges = async (req, res) => {
   }
 };
 
+const updateBadgeTkID = async (req, res) => {
+  try {
+    const { badges } = req.body;
+    const result = await adminService.updateBadgeTkID(badges);
+    res.json(result);
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+}
+
 module.exports = {
   createActivity,
   createBadges,
   viewActivityParticipants,
+  updateBadgeTkID,
 };

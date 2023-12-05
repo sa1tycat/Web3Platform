@@ -11,4 +11,7 @@ router.get('/view-activity-participants', adminController.viewActivityParticipan
 // 创建徽章
 router.post('/create-badges', adminController.createBadges);
 
+// 更新徽章的Token ID
+router.post('/update-badges-tokenID', adminController.updateBadgeTkID);
+
 module.exports = router;

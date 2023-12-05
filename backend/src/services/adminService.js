@@ -109,8 +109,39 @@ const createBadges = async (activityID, badges) => {
   };
 };
 
+// 更新徽章 tokenID
+const updateBadgeTkID = async (badges) => {
+  try {
+    let badgesUpdate = [];
+    let allUpdated = true; // 用于跟踪所有徽章是否都更新成功
+
+    for (const badge of badges) {
+      const result = await BadgeModel.updateBadgeTkID(badge);
+      badgesUpdate.push(result);
+
+      if (!result.success) {
+        allUpdated = false; // 如果任何徽章更新失败，将此标志设为false
+      }
+    }
+
+    return {
+      success: allUpdated,
+      message: allUpdated ? 'Badges updated successfully' : 'Some badges failed to update',
+      badgesUpdate,
+    };
+  } catch (error) {
+    return {
+      success: false,
+      message: 'Failed to update badges',
+      error: error.message,
+    };
+  }
+};
+
+
 module.exports = {
   createActivity,
   getActivityParticipants,
   createBadges,
+  updateBadgeTkID,
 };

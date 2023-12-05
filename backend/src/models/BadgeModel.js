@@ -2,22 +2,40 @@ const db = require('./db');
 
 // 创建临时徽章（ tokenID 暂时为 NULL）
 const createTempBagdge = async (badgeData) => {
-try {
-  const { activityID, title, description, imageURL, metadataURI } = badgeData;
-  const [result] = await db.query(
-    'INSERT INTO Badges (ActivityID, Title, Description, ImageURL, MetadataURI) VALUES (?, ?, ?, ?, ?)',
-    [activityID, title, description, imageURL, metadataURI]
-  );
-  return result.insertId; // 返回新创建的临时徽章ID
-} catch(error) {
-  console.error('Error in BadgeModel.createTempBadge:', error);
-  throw error;
-}
+  try {
+    const { activityID, title, description, imageURL, metadataURI } = badgeData;
+    const [result] = await db.query(
+      "INSERT INTO Badges (ActivityID, Title, Description, ImageURL, MetadataURI) VALUES (?, ?, ?, ?, ?)",
+      [activityID, title, description, imageURL, metadataURI]
+    );
+    return result.insertId; // 返回新创建的临时徽章ID
+  } catch (error) {
+    console.error("Error in BadgeModel.createTempBadge:", error);
+    throw error;
+  }
+};
 
-  
+// 更新徽章 TokenID
+const updateBadgeTkID = async (badge) => {
+  try {
+    const { badgeID, tokenID } = badge;
+    const [result] = await db.query(
+      'UPDATE Badges SET TokenID = ? WHERE BadgeID = ?',
+      [tokenID, badgeID]
+    );
 
-  
-}
+    // 检查是否有行受影响
+    if (result.affectedRows === 0) {
+      return { success: false, message: "No badge found with the given ID" };
+    }
+
+    return { success: true, message: "Badge updated successfully" };
+  } catch (error) {
+    console.error('Error in BadgeModel.updateBadgeTkID:', error);
+    throw error;
+  }
+};
+
 
 // 创建徽章（这个函数暂时不用了）
 const createBadge = async (connection, badgeData) => {
@@ -39,4 +57,5 @@ const createBadge = async (connection, badgeData) => {
 module.exports = {
   createBadge,
   createTempBagdge,
+  updateBadgeTkID,
 };
