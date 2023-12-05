@@ -26,10 +26,10 @@ const updateBadgeTkID = async (badge) => {
 
     // 检查是否有行受影响
     if (result.affectedRows === 0) {
-      return { success: false, message: "No badge found with the given ID" };
+      return { success: false, badgeID, message: "No badge found with the given ID" };
     }
 
-    return { success: true, message: "Badge updated successfully" };
+    return { success: true, badgeID, message: "Badge updated successfully" };
   } catch (error) {
     console.error('Error in BadgeModel.updateBadgeTkID:', error);
     throw error;
