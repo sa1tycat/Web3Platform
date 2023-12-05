@@ -42,12 +42,12 @@ const joinActivity = async (req, res) => {
     const result = await userService.joinActivity(userID, activityID);
 
     if (result) {
-      res.json({ registered: true, message: 'Successfully registered for the activity' });
+      res.json({ success: true, message: 'Successfully registered for the activity' });
     } else {
-      res.json({ registered: false, message: 'Failed to register for the activity' });
+      res.json({ success: false, message: 'Failed to register for the activity' });
     }
   } catch (error) {
-    res.status(500).json({ registered: false, message: 'Internal server error' });
+    res.status(500).json({ success: false, message: 'Internal server error' });
   }
 };
 
