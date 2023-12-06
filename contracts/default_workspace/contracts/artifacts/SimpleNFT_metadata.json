@@ -1,6 +1,6 @@
 {
 	"compiler": {
-		"version": "0.8.23+commit.f704f362"
+		"version": "0.8.22+commit.4fc1097e"
 	},
 	"language": "Solidity",
 	"output": {
@@ -265,6 +265,19 @@
 				"inputs": [
 					{
 						"internalType": "address",
+						"name": "_address",
+						"type": "address"
+					}
+				],
+				"name": "addToWhitelist",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
 						"name": "to",
 						"type": "address"
 					},
@@ -349,17 +362,41 @@
 						"type": "address"
 					},
 					{
-						"internalType": "string",
-						"name": "tokenURI",
-						"type": "string"
+						"components": [
+							{
+								"internalType": "uint256",
+								"name": "badgeID",
+								"type": "uint256"
+							},
+							{
+								"internalType": "string",
+								"name": "metadataURI",
+								"type": "string"
+							}
+						],
+						"internalType": "struct SimpleNFT.BadgeInfo[]",
+						"name": "badges",
+						"type": "tuple[]"
 					}
 				],
 				"name": "mintNFT",
 				"outputs": [
 					{
-						"internalType": "uint256",
+						"components": [
+							{
+								"internalType": "uint256",
+								"name": "badgeID",
+								"type": "uint256"
+							},
+							{
+								"internalType": "uint256",
+								"name": "tokenID",
+								"type": "uint256"
+							}
+						],
+						"internalType": "struct SimpleNFT.BadgeTokenPair[]",
 						"name": "",
-						"type": "uint256"
+						"type": "tuple[]"
 					}
 				],
 				"stateMutability": "nonpayable",
@@ -408,6 +445,19 @@
 					}
 				],
 				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_address",
+						"type": "address"
+					}
+				],
+				"name": "removeFromWhitelist",
+				"outputs": [],
+				"stateMutability": "nonpayable",
 				"type": "function"
 			},
 			{
@@ -571,6 +621,25 @@
 				"name": "transferOwnership",
 				"outputs": [],
 				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"name": "whitelist",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "view",
 				"type": "function"
 			}
 		],
@@ -883,11 +952,11 @@
 			]
 		},
 		"contracts/SimpleNFT.sol": {
-			"keccak256": "0x7ef5c23d0a64701f019eba29418cf9900928a5c1e77377edaa99e443b5093513",
+			"keccak256": "0x4464e4a9bc06a121b8c0c4574b91b12cfaf389b5c69dfdb50178d67cfc11771e",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://a10117e18c19ef4fb702882c3977a5b065df5107e1946d0e28a4336ca44eb745",
-				"dweb:/ipfs/QmZ1WHyHbQ25cP5gqY4kaaKmhVY6DQQZkiZ142LWrV1Pgs"
+				"bzz-raw://b854fe729f9db8c8f29c951e5820931a698bc416abdae91707cb378e6caee1bb",
+				"dweb:/ipfs/Qmf1R7rHnGnhX6pBqoUfBosJAKyqn3xgjnwKMLNpF5pkej"
 			]
 		}
 	},

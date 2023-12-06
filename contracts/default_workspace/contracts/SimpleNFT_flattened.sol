@@ -1741,7 +1741,10 @@ abstract contract ERC721URIStorage is IERC4906, ERC721 {
 // File: contracts/SimpleNFT.sol
 
 
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.0;
+
+
+
 
 contract SimpleNFT is ERC721URIStorage, Ownable {
     using Counters for Counters.Counter;
