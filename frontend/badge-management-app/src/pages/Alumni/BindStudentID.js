@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import apiService from './apiService';
+import alumniService from '../../api/alumniService';
 
 function BindStudentID() {
   const [DID, setDID] = useState('');
@@ -8,7 +8,7 @@ function BindStudentID() {
 
   const handleBindStudentId = async () => {
     try {
-      const response = await apiService.bindStudentId(DID, studentID);
+      const response = await alumniService.bindStudentId(DID, studentID);
       setMessage(response.message);
     } catch (error) {
       setMessage(error);

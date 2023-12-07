@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import apiService from './apiService';
+import alumniService from '../../api/alumniService';
 
 function ViewBadges() {
   const [userID, setUserID] = useState('');
@@ -7,7 +7,7 @@ function ViewBadges() {
 
   const handleViewBadges = async () => {
     try {
-      const response = await apiService.viewBadges(userID);
+      const response = await alumniService.viewBadges(userID);
       setMessage(JSON.stringify(response.badges));
     } catch (error) {
       setMessage(error);
