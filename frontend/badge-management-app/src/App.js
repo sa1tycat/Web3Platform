@@ -1,34 +1,25 @@
-// App.js
+// src/App.js
 import React from 'react';
-import BadgeForm from './BadgeForm';
-import AlumniSelector from './AlumniSelector';
-import { Layout, Typography } from 'antd';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import AdminLayout from './components/AdminLayout';
+import HomePage from './pages/admin/HomePage';
+import ActivityPage from './pages/admin/ActivityPage';
+// ...导入其他页面组件
 
-const { Header, Content } = Layout;
-const { Title } = Typography;
-
-function App() {
-  const handleBadgeCreate = (badgeData) => {
-    console.log('Badge Created:', badgeData);
-    // 这里可以调用API发送徽章数据
-  };
-
-  const handleAlumniSelect = (selectedAlumni) => {
-    console.log('Selected Alumni:', selectedAlumni);
-    // 这里可以处理校友选择逻辑
-  };
-
+const App = () => {
   return (
-    <Layout>
-      <Header>
-        <Title style={{ color: '#fff' }}>徽章管理系统</Title>
-      </Header>
-      <Content style={{ padding: '50px' }}>
-        <BadgeForm onBadgeCreate={handleBadgeCreate} />
-        <AlumniSelector onAlumniSelect={handleAlumniSelect} />
-      </Content>
-    </Layout>
+    <Router>
+      <Routes>
+        {/* 为管理员相关的页面使用AdminLayout */}
+        <Route path="/admin/*" element={<AdminLayout />}>
+          <Route index element={<HomePage />} />
+          <Route path="activity" element={<ActivityPage />} />
+          {/* ...其他管理员相关的路由 */}
+        </Route>
+        {/* ...其他非管理员的路由 */}
+      </Routes>
+    </Router>
   );
-}
+};
 
 export default App;
