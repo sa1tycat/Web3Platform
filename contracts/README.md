@@ -5,7 +5,7 @@
 ### 安装 🔧
 
 ```sh
-npm install
+npm  install
 ```
 ### 使用 ^-&
 
