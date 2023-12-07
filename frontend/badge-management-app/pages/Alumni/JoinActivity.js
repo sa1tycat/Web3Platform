@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import apiService from '../../api/apiService';
+import alumniService from '../../api/alumniService';
 
 function JoinActivity() {
   const [userID, setUserID] = useState('');
@@ -8,7 +8,7 @@ function JoinActivity() {
 
   const handleJoinActivity = async () => {
     try {
-      const response = await apiService.joinActivity(userID, activityID);
+      const response = await alumniService.joinActivity(userID, activityID);
       setMessage(response.message);
     } catch (error) {
       setMessage(error);
