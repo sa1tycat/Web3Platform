@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const apiClient = axios.create({
-  baseURL: 'http://localhost:3001', // 根据您的服务器地址进行修改
+  baseURL: 'http://localhost:3000', // 根据您的服务器地址进行修改
 });
 
 const adminService = {
