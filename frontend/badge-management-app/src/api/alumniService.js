@@ -2,7 +2,7 @@
 import axios from 'axios';
 
 const apiClient = axios.create({
-  baseURL: 'http://localhost:3000', // 请根据实际情况替换为您的后端服务地址
+  baseURL: 'http://localhost:3001', // 请根据实际情况替换为您的后端服务地址
 });
 //下面对应alumniController.js
 const alumniService = {
