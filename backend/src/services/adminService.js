@@ -28,7 +28,7 @@ const findMetadata = async (badge) => {
     title: "Programming Star",
     description:
       "This badge is for Zhang San winning the 1st prize in 2023 Programming Contest.",
-    image: "http://localhost:3000/images/test.png",
+    image: "http://localhost:3001/images/test.png",
     activity: "Programming Contest",
     attributes: [
       {
