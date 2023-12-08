@@ -4,9 +4,9 @@ import Public from "./Pages/Public/App"
 
 function App() {
   return (
-      // <Admin />
+      <Admin />
       // <Alumni />
-      <Public />
+      // <Public />÷\
   );
 }
 export default App;
