@@ -18,6 +18,9 @@ const Navbar = () => {
         <Menu.Item key="2">
           <Link to="/admin/activity">活动管理</Link>
         </Menu.Item>
+        <Menu.Item key="3">
+          <Link to="/admin/other">其他</Link>
+        </Menu.Item>
         {/* 更多导航项 */}
       </Menu>
     </Sider>
