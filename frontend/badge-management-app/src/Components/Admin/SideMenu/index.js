@@ -1,37 +1,37 @@
 import {
-    AppstoreOutlined,
+    HomeOutlined,
     ShopOutlined,
     ShoppingCartOutlined,
     UserOutlined,
   } from "@ant-design/icons";
   import { Menu } from "antd";
-  import { useEffect, useState } from "react";
+  //import { useEffect, useState } from "react";
   import { useLocation, useNavigate } from "react-router-dom";
   
   function SideMenu() {
-    const location = useLocation();
-    const [selectedKeys, setSelectedKeys] = useState("/");
+  //  const location = useLocation();
+  //  const [selectedKeys, setSelectedKeys] = useState("/");
   
-    useEffect(() => {
-      const pathName = location.pathname;
-      setSelectedKeys(pathName);
-    }, [location.pathname]);
+  //  useEffect(() => {
+  //    const pathName = location.pathname;
+  //    setSelectedKeys(pathName);
+  //  }, [location.pathname]);
   
     const navigate = useNavigate();
     return (
       <div className="SideMenu">
         <Menu
           className="SideMenuVertical"
-          mode="vertical"
+          // mode="vertical"
           onClick={(item) => {
             //item.key
             navigate(item.key);
           }}
-          selectedKeys={[selectedKeys]}
+          // selectedKeys={[selectedKeys]}
           items={[
             {
               label: "首页",
-              icon: <AppstoreOutlined />,
+              icon: <HomeOutlined />,
               key: "/admin",
             },
             {
@@ -42,12 +42,12 @@ import {
             {
               label: "学生管理",
               key: "/admin/stuinfo",
-              icon: <ShoppingCartOutlined />,
+              icon: <UserOutlined />,
             },
             {
               label: "等待更新",
               key: "/admin/update",
-              icon: <UserOutlined />,
+              icon: <ShoppingCartOutlined />,
             },
           ]}
         ></Menu>
