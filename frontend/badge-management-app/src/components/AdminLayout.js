@@ -1,25 +1,24 @@
 // src/components/AdminLayout.js
 import React from 'react';
 import { Layout } from 'antd';
+import { Outlet } from 'react-router-dom'; // 引入Outlet
 import Navbar from './Admin/Navbar';
 
 const { Content } = Layout;
 
-const AdminLayout = ({ children }) => {
+const AdminLayout = () => {
   return (
-    <Layout style={{ minHeight: '100vh' }}> // 确保整个视图高度
+    <Layout hasSider>
       <Navbar />
-      <Layout style={{ paddingLeft: 200, transition: 'all 0.2s' }}> // 调整内边距以适应Navbar
+      <Layout>
         <Content
           style={{
             background: '#fff',
             padding: 24,
-            margin: '24px 16px', // 添加上边距和侧边距
-            minHeight: 280,
-            overflow: 'initial', // 防止内容被截断
+            minHeight: 'calc(100vh - 64px)',
           }}
         >
-          {children} // 这里将是页面内容
+          <Outlet /> {/* 这里将渲染子路由 */}
         </Content>
       </Layout>
     </Layout>

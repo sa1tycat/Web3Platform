@@ -6,7 +6,7 @@ const { Sider } = Layout;
 
 const Navbar = () => {
   return (
-    <Sider width={200} style={{ background: '#fff' }}> {/* 确保 Sider 的宽度与 AdminLayout 的 marginLeft 匹配 */}
+    <Sider width={300} style={{ background: '#fff' }}> {/* 确保 Sider 的宽度与 AdminLayout 的 marginLeft 匹配 */}
       <Menu
         mode="inline"
         defaultSelectedKeys={['1']}
