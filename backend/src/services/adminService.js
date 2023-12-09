@@ -14,6 +14,12 @@ const createActivity = async (activityInfo) => {
   }
 };
 
+// 更新活动
+const updateActivity = async (activityID, activityInfo) => {
+  // 更新数据库中的活动信息
+  await activityModel.updateActivity(activityID, activityInfo);
+};
+
 // 查看活动参与者
 const getActivityParticipants = async (activityID) => {
   // 逻辑来获取特定活动的参与者
@@ -169,6 +175,7 @@ const distributeBadges = async (distributions) => {
 
 module.exports = {
   createActivity,
+  updateActivity,
   getActivityParticipants,
   createBadges,
   updateBadgeTkID,

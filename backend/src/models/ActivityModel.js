@@ -36,6 +36,19 @@ const createActivity = async (activityInfo) => {
   }
 };
 
+// 更新活动
+const updateActivity = async (activityID, activityInfo) => {
+  try {
+    const { name, description, startTime, endTime } = activityInfo;
+    const sql = `UPDATE Activities SET Name = ?, Description = ?, StartTime = ?, EndTime = ? WHERE ActivityID = ?`;
+    await db.query(sql, [name, description, startTime, endTime, activityID]);
+    return true;
+  } catch (error) {
+    console.error('Error updating activity:', error);
+    throw error;
+  }
+};
+
 // 根据 ID 查找活动
 const findActivityByID = async (activityID) => {
   try {
@@ -58,5 +71,6 @@ const findActivityByID = async (activityID) => {
 module.exports = {
   viewActivity,
   createActivity,
+  updateActivity,
   findActivityByID,
 };

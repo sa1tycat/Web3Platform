@@ -16,6 +16,22 @@ const createActivity = async (req, res) => {
   }
 };
 
+// 更新活动
+const updateActivity = async (req, res) => {
+  try {
+    const activityID = req.body.activityID;
+    const activityInfo = req.body.activityInfo;
+    await adminService.updateActivity(activityID, activityInfo);
+
+    res.json({
+      success: true,
+      message: 'Activity updated successfully'
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
 // 查看活动参与者
 const viewActivityParticipants = async (req, res) => {
   try {
@@ -67,6 +83,7 @@ const distributeBadges = async (req, res) => {
 
 module.exports = {
   createActivity,
+  updateActivity,
   createBadges,
   viewActivityParticipants,
   updateBadgeTkID,
