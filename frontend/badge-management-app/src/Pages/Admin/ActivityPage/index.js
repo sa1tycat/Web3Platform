@@ -27,9 +27,6 @@ const ActivityPage = () => {
   
 
   return (
-
-    <div>
-            <Typography.Title level={4}>HomePage</Typography.Title>
     <Row gutter={[16, 16]}>
       {activities.map((activity) => (
         <Col key={activity.ActivityID} span={8}>
@@ -48,7 +45,6 @@ const ActivityPage = () => {
         </Col>
       ))}
     </Row>
-    </div>
   );
 };
 
