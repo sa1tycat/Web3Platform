@@ -1,6 +1,7 @@
 const express = require('express'); // 引入express模块
 const path = require('path');
 const app = express();
+const cors = require('cors');
 const alumniRoutes = require('./src/api/alumniRoutes');
 const activityRoutes = require('./src/api/activityRoutes');
 const adminRoutes = require('./src/api/adminRoutes');
@@ -9,6 +10,9 @@ require('dotenv').config(); // 加载环境变量
 
 app.use(express.json()); // 用于解析JSON格式的请求体
 app.use(express.urlencoded({ extended: true })); // 用于解析表单格式的请求体
+
+// 使用默认的 CORS 配置，允许所有来源
+app.use(cors());
 
 app.get("/", (req, res) => {
   res.send("Hello World!");
