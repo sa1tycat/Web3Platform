@@ -325,6 +325,19 @@
 		"type": "function"
 	},
 	{
+		"inputs": [],
+		"name": "getMsgSender",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
 		"inputs": [
 			{
 				"internalType": "address",
@@ -351,16 +364,16 @@
 	{
 		"inputs": [
 			{
-				"internalType": "address",
-				"name": "recipient",
-				"type": "address"
-			},
-			{
 				"components": [
 					{
 						"internalType": "uint256",
 						"name": "badgeID",
 						"type": "uint256"
+					},
+					{
+						"internalType": "address",
+						"name": "recipient",
+						"type": "address"
 					},
 					{
 						"internalType": "string",
