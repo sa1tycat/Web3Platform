@@ -2,6 +2,7 @@ const fileService = require('./fileService');
 const activityModel = require('../models/ActivityModel');
 const BadgeModel = require('../models/BadgeModel');
 const UserModel = require('../models/UserModel');
+const UserBadgeModel = require('../models/UserBadgeModel');
 const db = require('../models/db');
 
 // 创建活动
@@ -115,30 +116,38 @@ const createBadges = async (activityID, badges) => {
   };
 };
 
-// 更新徽章 tokenID
+// 更新徽章 tokenID 并记录用户获得徽章
 const updateBadgeTkID = async (badges) => {
   try {
     let badgesUpdate = [];
-    let allUpdated = true; // 用于跟踪所有徽章是否都更新成功
+    let allUpdated = true;
 
     for (const badge of badges) {
-      const result = await BadgeModel.updateBadgeTkID(badge);
-      badgesUpdate.push(result);
+      const badgeUpdateResult = await BadgeModel.updateBadgeTkID(badge);
+      const userBadgeRecordResult = await UserBadgeModel.createUserBadgeRecord(badge);
 
-      if (!result.success) {
-        allUpdated = false; // 如果任何徽章更新失败，将此标志设为false
+      badgesUpdate.push({
+        badgeID: badge.badgeID,
+        tokenUpdateSuccess: badgeUpdateResult.success,
+        tokenUpdateMessage: badgeUpdateResult.message,
+        userBadgeRecordSuccess: userBadgeRecordResult.success,
+        userBadgeRecordMessage: userBadgeRecordResult.message
+      });
+
+      if (!badgeUpdateResult.success || !userBadgeRecordResult.success) {
+        allUpdated = false;
       }
     }
 
     return {
       success: allUpdated,
-      message: allUpdated ? 'Badges updated successfully' : 'Some badges failed to update',
+      message: allUpdated ? 'Badges and user badge records updated successfully' : 'Some updates failed',
       badgesUpdate,
     };
   } catch (error) {
     return {
       success: false,
-      message: 'Failed to update badges',
+      message: 'Failed to update badges and user badge records',
       error: error.message,
     };
   }
