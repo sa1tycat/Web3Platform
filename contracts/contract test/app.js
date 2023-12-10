@@ -667,19 +667,21 @@ window.addEventListener('load', function () {
                       return;
                   }
                   var userAccount = accounts[0];
+                  var useraddress = "0x8a3BC7f5fE946f5827112cd9830028F078C9B142";
                   var badgeInfo = [{
                       badgeID: 101,
                       recipient: userAccount,
                       metadataURI: 'Your_Metadata_URI'
                   }];
+                  contract.methods.getMsgSender().send({from:userAccount})
 
-                  contract.methods.mintNFT(badgeInfo).send({ from: userAccount })
-                      .then(function (tx) {
-                          console.log('Transaction:', tx);
-                      })
-                      .catch(function (error) {
-                          console.error('Error:', error);
-                      });
+                  // contract.methods.mintNFT(badgeInfo).send({ from: userAccount })
+                  //     .then(function (tx) {
+                  //         console.log('Transaction:', tx);
+                  //     })
+                  //     .catch(function (error) {
+                  //         console.error('Error:', error);
+                  //     });
               })
               .catch(function (error) {
                   console.error('Error requesting accounts:', error);
