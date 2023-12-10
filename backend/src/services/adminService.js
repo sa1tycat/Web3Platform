@@ -91,7 +91,7 @@ const createBadges = async (activityID, badges) => {
     // 测试实现，实际需要上传到 IPFS
     const metadataFilePath = await fileService.storeMetadata(metadata, 'metadata-' + badge.userID + '.json');
     console.log('metadataFilePath', metadataFilePath);
-    const metadataURI = 'http://localhost:3000/' + metadataFilePath;
+    const metadataURI = 'https://api.campusblock.space/' + metadataFilePath;
 
     // 数据库中临时记录徽章
     const badgeID = await BadgeModel.createTempBagdge({
