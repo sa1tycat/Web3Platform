@@ -657,31 +657,38 @@ window.addEventListener('load', function () {
         }
       ] // ABI from your contract
       var contract = new web3.eth.Contract(contractABI, contractAddress);
-
       document.getElementById('mintButton').addEventListener('click', function () {
           // 请求用户授权连接他们的账户
           ethereum.request({ method: 'eth_requestAccounts' })
               .then(function (accounts) {
+                  
                   if (accounts.length === 0) {
                       console.log('No accounts found. Make sure MetaMask is logged in.');
                       return;
                   }
                   var userAccount = accounts[0];
-                  var useraddress = "0x8a3BC7f5fE946f5827112cd9830028F078C9B142";
+                  document.getElementById('mycontract').innerText += userAccount;
                   var badgeInfo = [{
                       badgeID: 101,
                       recipient: userAccount,
                       metadataURI: 'Your_Metadata_URI'
                   }];
-                  contract.methods.getMsgSender().send({from:userAccount})
-
-                  // contract.methods.mintNFT(badgeInfo).send({ from: userAccount })
-                  //     .then(function (tx) {
-                  //         console.log('Transaction:', tx);
-                  //     })
-                  //     .catch(function (error) {
-                  //         console.error('Error:', error);
-                  //     });
+                  contract.methods.getMsgSender().send({ from: userAccount })
+                      .then(function (tx) {
+                          document.getElementById('mycontract').innerText += '\nTransaction:';
+                          document.getElementById('mycontract').innerText += tx;
+                      })
+                      .catch(function (error) {
+                        document.getElementById('mycontract').innerText += '\nError:';
+                        document.getElementById('mycontract').innerText += error;
+                      });
+                //   contract.methods.mintNFT(badgeInfo).send({ from: userAccount })
+                //       .then(function (tx) {
+                //           console.log('Transaction:', tx);
+                //       })
+                //       .catch(function (error) {
+                //           console.error('Error:', error);
+                //       });
               })
               .catch(function (error) {
                   console.error('Error requesting accounts:', error);
