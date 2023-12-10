@@ -2,6 +2,8 @@
 
 Web3Platform 是一个基于Web3技术的校友平台。
 
+## [在线网站](http://dd.wengjin.top)
+
 ## 项目结构
 
 - `LICENSE`: 项目的开源许可证。
