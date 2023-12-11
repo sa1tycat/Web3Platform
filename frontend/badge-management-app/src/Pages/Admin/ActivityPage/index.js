@@ -1,17 +1,23 @@
 import React, { useState, useEffect } from 'react';
 import { Card, Button, Row, Col } from 'antd';
 import moment from 'moment'; // 用于格式化日期
-import { getActivity } from '../../../API';
-
+import { useNavigate } from 'react-router-dom';
+import { getActivity } from '../../../API/getActivity';
 
 const ActivityPage = () => {
   const [activities, setActivities] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     getActivity().then(activitiesArray => {
       setActivities(activitiesArray); // 使用返回的数组更新状态
     });
   }, []);
+
+  const handleNavigate = (activityId) => {
+    // 使用activityId进行动态路由导航
+    navigate(`/admin/activity/${activityId}`);
+  };
 
   return (
     <Row gutter={[16, 16]} justify="start">
@@ -21,7 +27,7 @@ const ActivityPage = () => {
             hoverable
             style={{ width: 240, textAlign: 'center' }} // 设置卡片宽度和文本居中
             actions={[
-              <Button key="edit" type="primary">编辑</Button>,
+              <Button key="edit" type="primary" onClick={() => handleNavigate(activity.ActivityID)}>编辑</Button>,
               <Button key="delete" type="danger">删除</Button>
             ]}
           >

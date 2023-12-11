@@ -1,4 +1,5 @@
 const adminService = require('../services/adminService');
+const activityService = require('../services/activityService')
 
 // 创建活动
 const createActivity = async (req, res) => {
@@ -32,16 +33,28 @@ const updateActivity = async (req, res) => {
   }
 };
 
+const deleteActivity = async (req, res) => {
+  try {
+    const activityID = req.body.activityID;
+    const result = await adminService.deleteActivity(activityID);
+
+    res.json(result);
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
 // 查看活动参与者
-const viewActivityParticipants = async (req, res) => {
+const viewActivity = async (req, res) => {
   try {
     const activityID = parseInt(req.query.activityID);
     const participants = await adminService.getActivityParticipants(activityID);
-
+    const activityInfo = await activityService.viewActivity(activityID);
     res.json({
       success: true,
+      activityInfo,
       users: participants,
-      message: 'Participants retrieved successfully'
+      message: 'Activity retrieved successfully'
     });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
@@ -84,8 +97,9 @@ const distributeBadges = async (req, res) => {
 module.exports = {
   createActivity,
   updateActivity,
+  deleteActivity,
   createBadges,
-  viewActivityParticipants,
+  viewActivity,
   updateBadgeTkID,
   distributeBadges,
 };
