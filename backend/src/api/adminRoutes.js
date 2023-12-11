@@ -17,7 +17,5 @@ router.post('/create-badges', adminController.createBadges);
 // 更新徽章的Token ID
 router.post('/update-badges-tokenID', adminController.updateBadgeTkID);
 
-// 颁发徽章
-router.post('/distribute-badges', adminController.distributeBadges);
 
 module.exports = router;
