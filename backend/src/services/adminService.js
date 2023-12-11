@@ -1,5 +1,5 @@
 const fileService = require('./fileService');
-const activityModel = require('../models/ActivityModel');
+const ActivityModel = require('../models/ActivityModel');
 const BadgeModel = require('../models/BadgeModel');
 const UserModel = require('../models/UserModel');
 const UserBadgeModel = require('../models/UserBadgeModel');
@@ -8,7 +8,7 @@ const db = require('../models/db');
 // 创建活动
 const createActivity = async (activityInfo) => {
   try {
-    return await activityModel.createActivity(activityInfo);
+    return await ActivityModel.createActivity(activityInfo);
   } catch (error) {
     console.error('Error in adminService.createActivity:', error);
     throw error;
@@ -18,7 +18,43 @@ const createActivity = async (activityInfo) => {
 // 更新活动
 const updateActivity = async (activityID, activityInfo) => {
   // 更新数据库中的活动信息
-  await activityModel.updateActivity(activityID, activityInfo);
+  await ActivityModel.updateActivity(activityID, activityInfo);
+};
+
+// 删除活动
+const deleteActivity = async (activityID) => {
+  const connection = await db.getConnection();
+  try {
+    await connection.beginTransaction();
+
+    // 检查是否有关联的徽章
+    const [badgeRows] = await connection.query(
+      'SELECT COUNT(*) AS count FROM Badges WHERE ActivityID = ?',
+      [activityID]
+    );
+    if (badgeRows[0].count > 0) {
+      await connection.rollback();
+      return {
+        success: false,
+        message: 'Cannot delete activity with associated badges'
+      };
+    }
+
+    // 删除活动和相关的用户活动记录
+    await connection.query('DELETE FROM UserActivities WHERE ActivityID = ?', [activityID]);
+    await connection.query('DELETE FROM Activities WHERE ActivityID = ?', [activityID]);
+
+    await connection.commit();
+    return {
+      success: true,
+      message: 'Activity deleted successfully'
+    };
+  } catch (error) {
+    await connection.rollback();
+    throw error;
+  } finally {
+    connection.release();
+  }
 };
 
 // 查看活动参与者
@@ -185,6 +221,7 @@ const distributeBadges = async (distributions) => {
 module.exports = {
   createActivity,
   updateActivity,
+  deleteActivity,
   getActivityParticipants,
   createBadges,
   updateBadgeTkID,

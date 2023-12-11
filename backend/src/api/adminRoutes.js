@@ -8,6 +8,9 @@ router.post('/create-activity', adminController.createActivity);
 // 更新已存在的活动
 router.put('/update-activity', adminController.updateActivity);
 
+// 删除已存在的活动
+router.delete('/delete-activity', adminController.deleteActivity);
+
 // 获取特定活动的参与者列表
 router.get('/view-activity', adminController.viewActivity);
 

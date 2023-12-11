@@ -33,6 +33,17 @@ const updateActivity = async (req, res) => {
   }
 };
 
+const deleteActivity = async (req, res) => {
+  try {
+    const activityID = req.body.activityID;
+    const result = await adminService.deleteActivity(activityID);
+
+    res.json(result);
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
 // 查看活动参与者
 const viewActivity = async (req, res) => {
   try {
@@ -86,6 +97,7 @@ const distributeBadges = async (req, res) => {
 module.exports = {
   createActivity,
   updateActivity,
+  deleteActivity,
   createBadges,
   viewActivity,
   updateBadgeTkID,
