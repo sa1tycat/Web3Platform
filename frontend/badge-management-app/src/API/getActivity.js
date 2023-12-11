@@ -1,6 +1,7 @@
 export const getActivity = async () => {
+    const url = `https://api.campusblock.space/api/activity/view`;
     try {
-      const response = await fetch("https://api.campusblock.space/api/activity/view");
+      const response = await fetch(url);
       const data = await response.json();
       if (data.success) {
         return data.activity; // 如果成功，返回 'activity' 数组
