@@ -240,6 +240,31 @@
 				"anonymous": false,
 				"inputs": [
 					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "badgeID",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "tokenID",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "address",
+						"name": "recipient",
+						"type": "address"
+					}
+				],
+				"name": "TokenMinted",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
 						"indexed": true,
 						"internalType": "address",
 						"name": "from",
@@ -965,11 +990,11 @@
 			]
 		},
 		"contracts/SimpleNFT.sol": {
-			"keccak256": "0x4df32d45fe343f0b3ae340e57b3f85e849d8289b9f4d8eaa9063c8147cd5da21",
+			"keccak256": "0x3253f52270ef38a5c0f035b53bac52b35371f9431124cda2b139f08c5eae26bd",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://f303e9c098a38038e8c80e735bd1d264b8fcbb927396ae1b02eda69bce5dbfcc",
-				"dweb:/ipfs/QmRTgW4XT8KjySGEggGfPjA1YyiJCqdmKXhDhUG95y45dM"
+				"bzz-raw://51b055ad1477b712f47b950326349645574d9ad280470f35dc1b1c242b30da6b",
+				"dweb:/ipfs/QmXEvtW89vTeuWz4FLLUa4v2hsXk7nekZypn2ssVp4u3Q9"
 			]
 		}
 	},

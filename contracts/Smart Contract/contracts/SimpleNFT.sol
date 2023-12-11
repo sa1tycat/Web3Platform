@@ -24,32 +24,37 @@ contract SimpleNFT is ERC721URIStorage, Ownable {
 
     constructor() ERC721("SimpleNFT", "SNFT") Ownable(msg.sender) {}
 
-    function addToWhitelist(address _address) external onlyOwner {
+    function addToWhitelist(address _address) external  {
         whitelist[_address] = true;
     }
 
-    function removeFromWhitelist(address _address) external onlyOwner {
+    function removeFromWhitelist(address _address) external  {
         whitelist[_address] = false;
     }
 
+    event TokenMinted(uint256 badgeID, uint256 tokenID, address recipient);
+
     function mintNFT(BadgeInfo[] memory badges)
-        public onlyOwner
+        public 
         returns (BadgeTokenPair[] memory)
     {
-        require(whitelist[msg.sender], "Neither sender nor recipient is whitelisted");
-        BadgeTokenPair[] memory badgeTokenPairs = new BadgeTokenPair[](badges.length);
-        for (uint i = 0; i < badges.length; i++) {
-            uint256 tokenId = _tokenIdCounter.current();
-            _tokenIdCounter.increment();
-            _mint(badges[i].recipient, tokenId);
-            _setTokenURI(tokenId, badges[i].metadataURI);
-            badgeTokenPairs[i] = BadgeTokenPair({
-                badgeID: badges[i].badgeID,
-                tokenID: tokenId
-            });
-        }
-        return badgeTokenPairs;
+    require(whitelist[msg.sender], "Neither sender nor recipient is whitelisted");
+    BadgeTokenPair[] memory badgeTokenPairs = new BadgeTokenPair[](badges.length);
+    for (uint i = 0; i < badges.length; i++) {
+        uint256 tokenId = _tokenIdCounter.current();
+        _tokenIdCounter.increment();
+        _mint(badges[i].recipient, tokenId);
+        _setTokenURI(tokenId, badges[i].metadataURI);
+        badgeTokenPairs[i] = BadgeTokenPair({
+            badgeID: badges[i].badgeID,
+            tokenID: tokenId
+        });
+
+        // Emit an event for each new minted token
+        emit TokenMinted(badges[i].badgeID, tokenId, badges[i].recipient);
     }
+    return badgeTokenPairs; // This return value is only useful for calls, not transactions
+}
 
     // Function to view the msg.sender address
     function getMsgSender() external view returns (address) {
