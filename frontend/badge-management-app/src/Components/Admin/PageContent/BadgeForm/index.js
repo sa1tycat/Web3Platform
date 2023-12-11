@@ -1,5 +1,5 @@
 import React from 'react';
-import { Form, Input, Button, message } from 'antd';
+import { Form, Input, Button } from 'antd';
 
 const BadgeForm = ({ activityInfo, users, onFormSubmit }) => {
   const [form] = Form.useForm();
