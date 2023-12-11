@@ -3,7 +3,7 @@ window.addEventListener("load", function () {
     console.log("MetaMask is installed!");
     var web3 = new Web3(window.ethereum);
 
-    var contractAddress = "0xd47144d4112Fc7cF2f1bf2b14007606f7053CEA7";
+    var contractAddress = "0x6Fe0A4f5ABF735E8c885058a1200669B66acEc9d";
     var contractABI = [
       {
         "inputs": [],
@@ -234,6 +234,31 @@ window.addEventListener("load", function () {
           }
         ],
         "name": "OwnershipTransferred",
+        "type": "event"
+      },
+      {
+        "anonymous": false,
+        "inputs": [
+          {
+            "indexed": false,
+            "internalType": "uint256",
+            "name": "badgeID",
+            "type": "uint256"
+          },
+          {
+            "indexed": false,
+            "internalType": "uint256",
+            "name": "tokenID",
+            "type": "uint256"
+          },
+          {
+            "indexed": false,
+            "internalType": "address",
+            "name": "recipient",
+            "type": "address"
+          }
+        ],
+        "name": "TokenMinted",
         "type": "event"
       },
       {
@@ -684,19 +709,33 @@ window.addEventListener("load", function () {
               .send({ from: userAccount, gas: 300000 })
               .then(function (tx) {
                 // 交易已确认
-                console.log('Transaction:', tx);
+                console.log("Transaction:", tx);
                 // 在这里执行后续代码
-                contract.methods.mintNFT(badgeInfo).send({ from: userAccount ,gas:300000})
-                  .then(function (tx) {
-                      console.log('Transaction:', tx);
+                contract.methods
+                  .mintNFT(badgeInfo)
+                  .send({ from: userAccount, gas: 300000 })
+                  .on("receipt", function (receipt) {
+                    // Handle receipt
+                    console.log("Receipt:", receipt);
+                    // Assuming the event is named TokenMinted and it returns badgeID and tokenID
+                    if (receipt.events.TokenMinted) {
+                      let events = receipt.events.TokenMinted;
+                      if (!Array.isArray(events)) {
+                        events = [events];
+                      }
+                      events.forEach((event) => {
+                        console.log("Token Minted:", event.returnValues);
+                      });
+                    }
                   })
-                  .catch(function (error) {
-                      console.error('Error:', error);
+                  .on("error", function (error) {
+                    // Handle error
+                    console.error("Error:", error);
                   });
               })
               .catch(function (error) {
                 // 处理错误
-                console.error('Error:', error);
+                console.error("Error:", error);
               });
             //   contract.methods.mintNFT(badgeInfo).send({ from: userAccount })
             //       .then(function (tx) {
