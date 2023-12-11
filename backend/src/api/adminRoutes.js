@@ -9,7 +9,7 @@ router.post('/create-activity', adminController.createActivity);
 router.put('/update-activity', adminController.updateActivity);
 
 // 获取特定活动的参与者列表
-router.get('/view-activity-participants', adminController.viewActivityParticipants);
+router.get('/view-activity', adminController.viewActivity);
 
 // 创建徽章
 router.post('/create-badges', adminController.createBadges);

@@ -1,4 +1,5 @@
 const adminService = require('../services/adminService');
+const activityService = require('../services/activityService')
 
 // 创建活动
 const createActivity = async (req, res) => {
@@ -33,15 +34,16 @@ const updateActivity = async (req, res) => {
 };
 
 // 查看活动参与者
-const viewActivityParticipants = async (req, res) => {
+const viewActivity = async (req, res) => {
   try {
     const activityID = parseInt(req.query.activityID);
     const participants = await adminService.getActivityParticipants(activityID);
-
+    const activityInfo = await activityService.viewActivity(activityID);
     res.json({
       success: true,
+      activityInfo,
       users: participants,
-      message: 'Participants retrieved successfully'
+      message: 'Activity retrieved successfully'
     });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
@@ -85,7 +87,7 @@ module.exports = {
   createActivity,
   updateActivity,
   createBadges,
-  viewActivityParticipants,
+  viewActivity,
   updateBadgeTkID,
   distributeBadges,
 };
