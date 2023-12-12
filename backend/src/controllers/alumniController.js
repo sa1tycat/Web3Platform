@@ -47,7 +47,12 @@ const joinActivity = async (req, res) => {
       res.json({ success: false, message: 'Failed to register for the activity' });
     }
   } catch (error) {
-    res.status(500).json({ success: false, message: 'Internal server error' });
+    // 重复报名活动
+    if (error.code === 'ER_DUP_ENTRY') {
+      res.status(400).json({ success: false, message: 'You have already registered for this activity' });
+    } else {
+      res.status(500).json({ success: false, message: 'Internal server error' });
+    }
   }
 };
 
