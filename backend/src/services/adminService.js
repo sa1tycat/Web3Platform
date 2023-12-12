@@ -125,7 +125,8 @@ const createBadges = async (activityID, badges) => {
     // TODO: const metadataURI = await IPFSService.uploadToIPFS(metadata);
     
     // 测试实现，实际需要上传到 IPFS
-    const metadataFilePath = await fileService.storeMetadata(metadata, 'metadata-' + badge.userID + '.json');
+    const timeStamp = Date.now();  // 加上时间戳
+    const metadataFilePath = await fileService.storeMetadata(metadata, 'metadata-' + badge.userID + '-' + activityID + '-' + timeStamp + '.json');
     console.log('metadataFilePath', metadataFilePath);
     const metadataURI = 'https://api.campusblock.space/' + metadataFilePath;
 
