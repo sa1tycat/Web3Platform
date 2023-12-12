@@ -697,7 +697,16 @@ const contractABI = [
         const receipt = await contract.methods.mintNFT(badgeArray).send({ from: userAccount, gas: 300000 });
         console.log("Receipt:", receipt);
         // Process receipt...
-  
+        
+        if (receipt.events.TokenMinted) {
+          let events = receipt.events.TokenMinted;
+          if (!Array.isArray(events)) {
+            events = [events];
+          }
+          events.forEach((event) => {
+            console.log("Token Minted:", event.returnValues);
+          });
+        }
       } catch (error) {
         console.error("Error:", error);
       }
