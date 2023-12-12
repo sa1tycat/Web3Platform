@@ -129,48 +129,57 @@ const modedifyMetadataTest = (metadata, badgeInfo) => {
 // 创建分发徽章
 const createBadges = async (activityID, badges) => {
   let badgesCreation = [];
-  for (const badge of badges) {
-    // 查找预生成的 Metadata
-    const originalMetadata = await findMetadata(badge.badgeInfo);
-    
-    // 修改 Metadata 字段
-    const modifiedMetadata = modedifyMetadataTest(originalMetadata, badge.badgeInfo);
-    
-    // 插入活动名字字段
-    const activity = await ActivityModel.findActivityByID(activityID); // 获得活动信息
-    modifiedMetadata.activity = activity.Name; // 再活动字段插入活动名字
-    console.log('modifiedMetadata', modifiedMetadata);
+  try {
+    for (const badge of badges) {
+      // 查找预生成的 Metadata
+      const originalMetadata = await findMetadata(badge.badgeInfo);
+      
+      // 修改 Metadata 字段
+      const modifiedMetadata = modedifyMetadataTest(originalMetadata, badge.badgeInfo);
+      
+      // 插入活动名字字段
+      const activity = await ActivityModel.findActivityByID(activityID); // 获得活动信息
+      modifiedMetadata.activity = activity.Name; // 再活动字段插入活动名字
+      console.log('modifiedMetadata', modifiedMetadata);
 
-    // 上传到 IPFS
-    // TODO: const metadataURI = await IPFSService.uploadToIPFS(metadata);
-    
-    // 测试实现，实际需要上传到 IPFS
-    const timeStamp = Date.now();  // 时间戳
-    const metadataFilePath = await fileService.storeMetadata(modifiedMetadata, 'metadata-' + badge.userID + '-' + activityID + '-' + timeStamp + '.json');
-    console.log('metadataFilePath', metadataFilePath);
-    const metadataURI = 'https://api.campusblock.space/' + metadataFilePath;
+      // 上传到 IPFS
+      // TODO: const metadataURI = await IPFSService.uploadToIPFS(metadata);
+      
+      // 测试实现，实际需要上传到 IPFS
+      const timeStamp = Date.now();  // 时间戳
+      const metadataFilePath = await fileService.storeMetadata(modifiedMetadata, 'metadata-' + badge.userID + '-' + activityID + '-' + timeStamp + '.json');
+      console.log('metadataFilePath', metadataFilePath);
+      const metadataURI = 'https://api.campusblock.space/' + metadataFilePath;
 
-    // 数据库中临时记录徽章
-    const badgeID = await BadgeModel.createTempBagdge({
-      activityID,
-      title: modifiedMetadata.title,
-      description: modifiedMetadata.description,
-      imageURL: modifiedMetadata.image,
-      metadataURI
-    });
-    
-    // 记录徽章分发信息
-    badgesCreation.push({
-      userID: badge.userID,
-      badgeID,
-      badgeMetadataURI: metadataURI
-    });
+      // 数据库中临时记录徽章
+      const badgeID = await BadgeModel.createTempBagdge({
+        activityID,
+        title: modifiedMetadata.title,
+        description: modifiedMetadata.description,
+        imageURL: modifiedMetadata.image,
+        metadataURI
+      });
+      
+      // 记录徽章分发信息
+      badgesCreation.push({
+        userID: badge.userID,
+        badgeID,
+        badgeMetadataURI: metadataURI
+      });
+    }
+    return {
+      success: true,
+      message: 'Badges created successfully',
+      badgesCreation
+    };
+  } catch (error) {
+    console.error(error);
+    return {
+      success: false,
+      message: 'An error occurred while creating badges',
+      error: error.message
+    };
   }
-  return {
-    success: true,
-    message: 'Badges created successfully',
-    badgesCreation
-  };
 };
 
 // 更新徽章 tokenID 并记录用户获得徽章
