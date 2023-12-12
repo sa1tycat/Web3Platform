@@ -701,9 +701,22 @@ window.addEventListener("load", function () {
               {
                 badgeID: 101,
                 recipient: userAccount,
-                metadataURI: "Your_Metadata_URI",
+                metadataURI: "Your_Metadata_URI_1",
               },
-            ];
+              {
+                badgeID: 102,
+                recipient: userAccount,
+                metadataURI: "Your_Metadata_URI_2",
+              },
+              {
+                badgeID: 103,
+                recipient: userAccount,
+                metadataURI: "Your_Metadata_URI_3",
+              },
+              // ... 你可以继续添加更多的映射对象
+            ];            
+            document.getElementById("mycontract").innerText += '\n badgeinfo:\n';
+            document.getElementById("mycontract").innerText += badgeInfo;
             contract.methods
               .addToWhitelist(userAccount)
               .send({ from: userAccount, gas: 300000 })
@@ -737,13 +750,6 @@ window.addEventListener("load", function () {
                 // 处理错误
                 console.error("Error:", error);
               });
-            //   contract.methods.mintNFT(badgeInfo).send({ from: userAccount })
-            //       .then(function (tx) {
-            //           console.log('Transaction:', tx);
-            //       })
-            //       .catch(function (error) {
-            //           console.error('Error:', error);
-            //       });
           })
           .catch(function (error) {
             console.error("Error requesting accounts:", error);
