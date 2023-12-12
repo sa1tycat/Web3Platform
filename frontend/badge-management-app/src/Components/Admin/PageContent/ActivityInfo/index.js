@@ -67,7 +67,7 @@ const ActivityInfoCard = ({ activityID, onBack }) => {
       //   message.success('所有徽章信息提交成功');
       if (data.success && data.badgesCreation) {
         const badgeArray = generateBadgeArray(users, data.badgesCreation);
-        console.log(badgeArray);
+        console.log('生成的徽章数组',badgeArray);
         // setBadgeArray(data.badgesCreation);
         handleMintBadges(badgeArray);
       } else {
