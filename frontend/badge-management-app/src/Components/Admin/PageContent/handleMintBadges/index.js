@@ -677,15 +677,15 @@ const contractABI = [
       "type": "function"
     }
   ]; // 智能合约ABI
-const contractAddress = "0x6Fe0A4f5ABF735E8c885058a1200669B66acEc9d"; // 合约地址
+  const contractAddress = "0x6Fe0A4f5ABF735E8c885058a1200669B66acEc9d";
 
-const handleMintBadges = async (badgeArray) => {
+  const handleMintBadges = async (badgeArray) => {
     if (typeof window.ethereum !== "undefined") {
       const web3 = new Web3(window.ethereum);
       const contract = new web3.eth.Contract(contractABI, contractAddress);
   
       try {
-        const accounts = await ethereum.request({ method: "eth_requestAccounts" });
+        const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
         if (accounts.length === 0) {
           console.log("No accounts found. Make sure MetaMask is logged in.");
           return;
