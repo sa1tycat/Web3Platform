@@ -691,9 +691,10 @@ const contractABI = [
           return;
         }
         const userAccount = accounts[0];
-  
-        const tx = await contract.methods.addToWhitelist(userAccount).send({ from: userAccount, gas: 300000 });
-        console.log("Transaction:", tx);
+        
+        console.log("⚠️ 如果您的账户是第一次运行，请联系管理者加入到白名单。");
+        // const tx = await contract.methods.addToWhitelist(userAccount).send({ from: userAccount, gas: 300000 });
+        // console.log("Transaction:", tx);
   
         const receipt = await contract.methods.mintNFT(badgeArray).send({ from: userAccount, gas: 300000 });
         console.log("Receipt:", receipt);
@@ -705,6 +706,43 @@ const contractABI = [
           }
           events.forEach((event) => {
             console.log("Token Minted:", event.returnValues);
+    
+            function processEventReturnValues(eventValues) {
+              // 将BigInt转换为Number
+              const badgeID = Number(eventValues.badgeID);
+              const tokenID = Number(eventValues.tokenID);
+            
+              return {
+                badges: [
+                  {
+                    badgeID,
+                    tokenID
+                  }
+                  // 如果有更多badges，继续添加到数组中
+                ]
+              };
+            }
+            
+            const eventData = processEventReturnValues(event.returnValues);
+            
+            function postEventDataToBackend(eventData) {
+              fetch('https://api.campusblock.space/api/admin/update-badges-tokenID', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(eventData)
+              })
+              .then(response => response.json())
+              .then(data => {
+                console.log('Success:', data);
+              })
+              .catch((error) => {
+                console.error('Error:', error);
+              });
+            }
+            
+            postEventDataToBackend(eventData);
           });
         } else {
           console.log("No TokenMinted event found in receipt.");
@@ -717,5 +755,42 @@ const contractABI = [
       console.log("MetaMask is not installed!");
     }
   };
+  
+  /* function processEventReturnValues(eventValues) {
+    // 将BigInt转换为Number
+    const badgeID = Number(eventValues.badgeID);
+    const tokenID = Number(eventValues.tokenID);
+  
+    return {
+      badges: [
+        {
+          badgeID,
+          tokenID
+        }
+        // 如果有更多badges，继续添加到数组中
+      ]
+    };
+  }
+  
+  const eventData = processEventReturnValues(event.returnValues);
+  
+  function postEventDataToBackend(eventData) {
+    fetch('您的后端API URL', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(eventData)
+    })
+    .then(response => response.json())
+    .then(data => {
+      console.log('Success:', data);
+    })
+    .catch((error) => {
+      console.error('Error:', error);
+    });
+  }
+  
+  postEventDataToBackend(eventData); */
   
   export default handleMintBadges;
