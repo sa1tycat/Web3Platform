@@ -69,7 +69,7 @@ const ActivityInfoCard = ({ activityID, onBack }) => {
         const badgeArray1 = generateBadgeArray(users, data.badgesCreation);
         console.log(badgeArray1);
         setBadgeArray(data.badgesCreation);
-        handleMintBadges(badgeArray);
+        handleMintBadges(badgeArray1);
       } else {
         message.error('提交失败: ' + data.message);
       }
