@@ -692,13 +692,13 @@ const contractABI = [
         }
         const userAccount = accounts[0];
   
-        await contract.methods.addToWhitelist(userAccount).send({ from: userAccount, gas: 300000 });
-        
+        const tx = await contract.methods.addToWhitelist(userAccount).send({ from: userAccount, gas: 300000 });
+        console.log("Transaction:", tx);
+  
         const receipt = await contract.methods.mintNFT(badgeArray).send({ from: userAccount, gas: 300000 });
         console.log("Receipt:", receipt);
-        // Process receipt...
-        
-        if (receipt.events.TokenMinted) {
+  
+        if (receipt.events && receipt.events.TokenMinted) {
           let events = receipt.events.TokenMinted;
           if (!Array.isArray(events)) {
             events = [events];
@@ -706,7 +706,10 @@ const contractABI = [
           events.forEach((event) => {
             console.log("Token Minted:", event.returnValues);
           });
+        } else {
+          console.log("No TokenMinted event found in receipt.");
         }
+  
       } catch (error) {
         console.error("Error:", error);
       }
