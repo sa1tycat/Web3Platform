@@ -3,7 +3,8 @@ import React, { useEffect, useState } from 'react';
 import { Card, List, Button, Modal, message } from 'antd';
 import moment from 'moment';
 import { fetchActivityDetails } from '../../../../API/fetchActivityDetails';
-import BadgeForm from '../BadgeForm'; // 确保路径正确
+import BadgeForm from '../BadgeForm'; // 
+import handleMintBadges from '../handleMintBadges';
 
 const ActivityInfoCard = ({ activityID, onBack }) => {
   const [activityInfo, setActivityInfo] = useState(null);
@@ -11,6 +12,7 @@ const ActivityInfoCard = ({ activityID, onBack }) => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
   const [badges, setBadges] = useState([]); // 状态用于存储所有徽章数据
+  const [badgeArray, setBadgeArray] = useState([]); // 状态用于存储badgeArray
 
   useEffect(() => {
     fetchActivityDetails(activityID).then(data => {
@@ -61,14 +63,34 @@ const ActivityInfoCard = ({ activityID, onBack }) => {
       if (!response.ok) throw new Error('Network response was not ok.');
       const data = await response.json();
 
-      if (data.success) {
-        message.success('所有徽章信息提交成功');
+      // if (data.success) {
+      //   message.success('所有徽章信息提交成功');
+      if (data.success && data.badgesCreation) {
+        const badgeArray1 = generateBadgeArray(users, data.badgesCreation);
+        console.log(badgeArray1);
+        setBadgeArray(data.badgesCreation);
+        handleMintBadges(badgeArray);
       } else {
         message.error('提交失败: ' + data.message);
       }
     } catch (error) {
       message.error('提交出错: ' + error.message);
     }
+  };
+
+  const generateBadgeArray = (users, badgesCreation) => {
+    return badgesCreation.map((badge) => {
+      const user = users.find(u => u.userID === badge.userID);
+      if (!user) {
+        console.warn(`No user found for userID ${badge.userID}`);
+        return null;
+      }
+      return {
+        badgeID: badge.badgeID,
+        recipient: user.address,
+        metadataURI: badge.badgeMetadataURI,
+      };
+    }).filter(Boolean); // 过滤掉任何可能出现的null值
   };
 
   return (
