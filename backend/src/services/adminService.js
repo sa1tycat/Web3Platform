@@ -71,7 +71,7 @@ const findMetadata = async (badge) => {
     title: "Programming Star",
     description:
       "This badge is for Zhang San winning the 1st prize in 2023 Programming Contest.",
-    image: "http://localhost:3000/images/test.png",
+    image: "https://api.campusblock.space/files/images/test.png",
     activity: "Programming Contest",
     attributes: [
       {
@@ -103,11 +103,27 @@ const findMetadata = async (badge) => {
   return metadata;
 }
 
+// 这个版本的是 findMetadata() 正确实现后使用的函数
+// 修改 Metadata 字段
 const modifyMetadata = (metadata, badgeInfo) => {
   metadata.title = badgeInfo.title;
   metadata.description = badgeInfo.description;
-  metadata.image = badgeInfo.image;
-  metadata.attributes = badgeInfo.attributes;
+  return metadata;
+};
+
+const modedifyMetadataTest = (metadata, badgeInfo) => {
+  metadata.title = badgeInfo.title;
+  metadata.description = badgeInfo.description;
+  // 将 metadata 中的 attributes 替换为 badgeInfo 中的 attributes
+  metadata.attributes.forEach((attr) => {
+    // 将 trait_type 的首字母小写并与 badgeInfo.attributes 中的键进行匹配
+    let key =
+      attr.trait_type.charAt(0).toLowerCase() + attr.trait_type.slice(1);
+    if (badgeInfo.attributes[key]) {
+      attr.value = badgeInfo.attributes[key];
+    }
+  });
+  return metadata;
 };
 
 // 创建分发徽章
@@ -115,26 +131,31 @@ const createBadges = async (activityID, badges) => {
   let badgesCreation = [];
   for (const badge of badges) {
     // 查找预生成的 Metadata
-    const metadata = await findMetadata(badge.badgeInfo);
-    // 插入活动名字字段
-    const activity = await activityModel.findActivityByID(activityID); // 获得活动信息
-    metadata.activity = activity.Name; // 再活动字段插入活动名字
+    const originalMetadata = await findMetadata(badge.badgeInfo);
+    
     // 修改 Metadata 字段
-    modifyMetadata(metadata, badge.badgeInfo);
+    const modifiedMetadata = modedifyMetadataTest(originalMetadata, badge.badgeInfo);
+    
+    // 插入活动名字字段
+    const activity = await ActivityModel.findActivityByID(activityID); // 获得活动信息
+    modifiedMetadata.activity = activity.Name; // 再活动字段插入活动名字
+    console.log('modifiedMetadata', modifiedMetadata);
+
     // 上传到 IPFS
     // TODO: const metadataURI = await IPFSService.uploadToIPFS(metadata);
     
     // 测试实现，实际需要上传到 IPFS
-    const metadataFilePath = await fileService.storeMetadata(metadata, 'metadata-' + badge.userID + '.json');
+    const timeStamp = Date.now();  // 时间戳
+    const metadataFilePath = await fileService.storeMetadata(modifiedMetadata, 'metadata-' + badge.userID + '-' + activityID + '-' + timeStamp + '.json');
     console.log('metadataFilePath', metadataFilePath);
     const metadataURI = 'https://api.campusblock.space/' + metadataFilePath;
 
     // 数据库中临时记录徽章
     const badgeID = await BadgeModel.createTempBagdge({
       activityID,
-      title: badge.badgeInfo.title,
-      description: badge.badgeInfo.description,
-      imageURL: badge.badgeInfo.image,
+      title: modifiedMetadata.title,
+      description: modifiedMetadata.description,
+      imageURL: modifiedMetadata.image,
       metadataURI
     });
     

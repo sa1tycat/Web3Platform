@@ -3,7 +3,7 @@ const db = require("./db");
 // 根据ID查找用户
 const getUserNameByID = async (connection, userID) => {
   const [rows] = await connection.query(
-    'SELECT Name FROM Users WHERE UserID = ?',
+    "SELECT Name AS name FROM Users WHERE UserID = ?",
     [userID]
   );
   if (rows.length > 0) {
@@ -34,7 +34,18 @@ const viewBadges = async (userID) => {
   try {
     const query = `
       SELECT 
-        b.*, ub.AcquiredAt, a.Name AS ActivityName, a.Description AS ActivityDescription 
+        b.BadgeID AS badgeID,
+        b.Title AS title,
+        b.Description AS description,
+        b.ImageURL AS imageURL,
+        b.MetadataURI AS metadataURI,
+        b.CreatedAt AS createdAt,
+        b.UpdatedAt AS updatedAt,
+        b.TokenID AS tokenID,
+        ub.AcquiredAt AS acquiredAt,
+        b.ActivityID AS activityID,
+        a.Name AS activityName,
+        a.Description AS activityDescription
       FROM 
         UserBadges ub
         INNER JOIN Badges b ON ub.BadgeID = b.BadgeID
@@ -42,11 +53,10 @@ const viewBadges = async (userID) => {
       WHERE 
         ub.UserID = ?
     `;
-
     const [badges] = await db.query(query, [userID]);
     return badges;
   } catch (error) {
-    console.error('Error in UserModel.viewBadges:', error);
+    console.error("Error in UserModel.viewBadges:", error);
     throw error;
   }
 };
@@ -55,13 +65,13 @@ const viewBadges = async (userID) => {
 const joinActivity = async (userID, activityID) => {
   try {
     const [result] = await db.query(
-      'INSERT INTO UserActivities (UserID, ActivityID) VALUES (?, ?)',
+      "INSERT INTO UserActivities (UserID, ActivityID) VALUES (?, ?)",
       [userID, activityID]
     );
 
     return result.affectedRows > 0;
   } catch (error) {
-    console.error('Error in UserModel.joinActivity:', error);
+    console.error("Error in UserModel.joinActivity:", error);
     throw error;
   }
 };
@@ -70,7 +80,7 @@ const joinActivity = async (userID, activityID) => {
 const findUsersByActivityID = async (activityID) => {
   // 临时增加了 Address 字段，后期应该改成通过 DID 智能合约查找
   const [users] = await db.query(
-    'SELECT u.UserID AS userID, u.Name AS name, u.StudentID AS studentID, u.DID, u.Address AS address FROM Users u JOIN UserActivities ua ON u.UserID = ua.UserID WHERE ua.ActivityID = ?',
+    "SELECT u.UserID AS userID, u.Name AS name, u.StudentID AS studentID, u.DID, u.Address AS address FROM Users u JOIN UserActivities ua ON u.UserID = ua.UserID WHERE ua.ActivityID = ?",
     [activityID]
   );
   return users;
