@@ -679,7 +679,7 @@ const contractABI = [
   ]; // 智能合约ABI
   const contractAddress = "0x6Fe0A4f5ABF735E8c885058a1200669B66acEc9d";
 
-  const handleMintBadges = async (badgeArray1) => {
+  const handleMintBadges = async (badgeArray) => {
     if (typeof window.ethereum !== "undefined") {
       const web3 = new Web3(window.ethereum);
       const contract = new web3.eth.Contract(contractABI, contractAddress);
@@ -695,7 +695,7 @@ const contractABI = [
         const tx = await contract.methods.addToWhitelist(userAccount).send({ from: userAccount, gas: 300000 });
         console.log("Transaction:", tx);
   
-        const receipt = await contract.methods.mintNFT(badgeArray1).send({ from: userAccount, gas: 300000 });
+        const receipt = await contract.methods.mintNFT(badgeArray).send({ from: userAccount, gas: 300000 });
         console.log("Receipt:", receipt);
   
         if (receipt.events && receipt.events.TokenMinted) {

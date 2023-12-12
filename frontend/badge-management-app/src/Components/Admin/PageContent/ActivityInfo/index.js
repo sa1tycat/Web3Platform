@@ -12,7 +12,7 @@ const ActivityInfoCard = ({ activityID, onBack }) => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
   const [badges, setBadges] = useState([]); // 状态用于存储所有徽章数据
-  const [badgeArray, setBadgeArray] = useState([]); // 状态用于存储badgeArray
+  // const [ setBadgeArray] = useState([]); // 状态用于存储badgeArray
 
   useEffect(() => {
     fetchActivityDetails(activityID).then(data => {
@@ -66,10 +66,10 @@ const ActivityInfoCard = ({ activityID, onBack }) => {
       // if (data.success) {
       //   message.success('所有徽章信息提交成功');
       if (data.success && data.badgesCreation) {
-        const badgeArray1 = generateBadgeArray(users, data.badgesCreation);
-        console.log(badgeArray1);
-        setBadgeArray(data.badgesCreation);
-        handleMintBadges(badgeArray1);
+        const badgeArray = generateBadgeArray(users, data.badgesCreation);
+        console.log(badgeArray);
+        // setBadgeArray(data.badgesCreation);
+        handleMintBadges(badgeArray);
       } else {
         message.error('提交失败: ' + data.message);
       }
