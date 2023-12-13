@@ -4,6 +4,8 @@ import moment from 'moment'; // 用于格式化日期
 import { useNavigate } from 'react-router-dom';
 import { getActivity } from '../../../API/getActivity';
 import DeleteActivityButton from './DeleteActivityButton'
+import { Spin } from 'antd';
+
 
 const ActivityPage = () => {
   const [activities, setActivities] = useState([]);
@@ -57,7 +59,11 @@ const ActivityPage = () => {
             />
           </Card>
         </Col>
-      )) : <p>Loading activities...</p>}
+      )) : (
+        <div className="activityPage-loading">
+          <Spin size="large" tip="正在加载活动数据，请稍候..." />
+        </div>
+      )}
     </Row>
   );
 };

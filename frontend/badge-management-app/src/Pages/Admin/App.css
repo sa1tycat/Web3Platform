@@ -1,38 +1,45 @@
-.App{
+.App {
     display: flex;
     flex-direction: column;
     width: 100vw;
     height: 100vh;
-}
-.AppHeader{
+    overflow: hidden; /* 防止整个应用滚动 */
+  }
+  
+  .AppHeader {
     height: 50px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 4px 20px 4px 12px;
+    padding: 4px 20px;
     border-bottom: 1px solid rgba(0, 0, 0, 0.15);
-}
-.AppFooter{
-height: 50px;
-display: flex;
-justify-content: space-evenly;
-align-items: center;
-border-top: 1px solid rgba(0, 0, 0, 0.15);
-
-}
-.SideMenuAndPageContent{
+  }
+  
+  .AppFooter {
+    height: 50px;
     display: flex;
-    flex: 1;
-    justify-content: flex-start;
-    align-items: flex-start;
-    background-color: rgba(0, 0, 0, 0.05) ;
-}
-.SideMenu{
-    height: 100%;
-}
-.SideMenuVertical{
-    height: 100%;
-}
-.PageContent{
-    padding-left: 12px;
-}
+    justify-content: space-evenly;
+    align-items: center;
+    position: fixed; /* 固定在底部 */
+    bottom: 0;
+    width: 100%;
+    border-top: 1px solid rgba(0, 0, 0, 0.15);
+  }
+  
+  .MainContent {
+    display: flex;
+    flex: 1; /* 填充剩余的空间 */
+    overflow: hidden; /* 防止产生滚动条 */
+  }
+  
+  .SideMenu {
+    width: 150px; /* 侧边栏宽度 */
+    flex-shrink: 0; /* 防止侧边栏缩小 */
+  }
+  
+  .PageContent {
+    flex-grow: 1; /* 占据剩余空间 */
+    overflow-y: auto; /* 如果内容超出则显示滚动条 */
+    padding: 20px; /* 根据需要调整内边距 */
+  }
+  

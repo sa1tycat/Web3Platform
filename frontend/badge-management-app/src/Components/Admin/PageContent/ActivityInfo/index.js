@@ -1,6 +1,7 @@
 // ActivityInfoCard.js
 import React, { useEffect, useState } from 'react';
-import { Card, List, Button, Modal, message } from 'antd';
+import { Descriptions, Divider, Card, List, Button, Modal, message } from 'antd';
+import { EditOutlined } from '@ant-design/icons';
 import moment from 'moment';
 import { fetchActivityDetails } from '../../../../API/fetchActivityDetails';
 import BadgeForm from '../BadgeForm'; // 
@@ -97,44 +98,50 @@ const ActivityInfoCard = ({ activityID, onBack }) => {
   return (
     <>
       <Card
-        title={activityInfo?.Name}
-        extra={
-          <>
-            <Button onClick={handleSubmitBadges} style={{ marginRight: 8 }}>生成所有徽章</Button>
-            <Button onClick={onBack}>返回</Button>
-          </>
-        }
-        style={{ width: '100%', height: '100vh' }} 
-      >
-        <p>开始时间: {moment(activityInfo?.StartTime).format('YYYY年MM月DD日 HH:mm')}</p>
-        <p>结束时间: {moment(activityInfo?.EndTime).format('YYYY年MM月DD日 HH:mm')}</p>
-        <p>简介: {activityInfo?.Description}</p>
-        <List
-          header={<div>参与者</div>}
-          bordered
-          dataSource={users}
-          renderItem={user => (
-            <List.Item actions={[<Button onClick={() => showModal(user)}>编辑徽章</Button>]}>
-              {user.name} - {user.studentID}
-            </List.Item>
-          )}
-        />
-      </Card>
-      <Modal
-        title="编辑徽章"
-        open={isModalVisible}
-        onCancel={handleCancel}
-        footer={null}
-      >
-        {selectedUser && (
-          <BadgeForm 
-            activityInfo={activityInfo}
-            user={selectedUser}
-            onFormSubmit={handleFormSubmit}
+    title={<h2 style={{ margin: 0 }}>{activityInfo?.Name}</h2>}
+    extra={
+      <>
+        <Button onClick={handleSubmitBadges} style={{ marginRight: 8 }}>生成所有徽章</Button>
+        <Button onClick={onBack}>返回</Button>
+      </>
+    }
+    style={{ width: '100%' }} // 移除了高度限制，让它自然流动
+    bodyStyle={{ padding: '20px' }} // 增加内边距
+  >
+    <Descriptions layout="horizontal" bordered column={1}>
+      <Descriptions.Item label="开始时间">{moment(activityInfo?.StartTime).format('YYYY年MM月DD日 HH:mm')}</Descriptions.Item>
+      <Descriptions.Item label="结束时间">{moment(activityInfo?.EndTime).format('YYYY年MM月DD日 HH:mm')}</Descriptions.Item>
+      <Descriptions.Item label="简介">{activityInfo?.Description}</Descriptions.Item>
+    </Descriptions>
+    <Divider orientation="left">参与者</Divider>
+    <List
+      itemLayout="horizontal"
+      dataSource={users}
+      renderItem={user => (
+        <List.Item actions={[<Button icon={<EditOutlined />} onClick={() => showModal(user)}>编辑徽章</Button>]}>
+          <List.Item.Meta
+            title={user.name}
+            description={`学号：${user.studentID}`}
           />
-        )}
-      </Modal>
-    </>
+        </List.Item>
+      )}
+    />
+  </Card>
+  <Modal
+    title="编辑徽章"
+    open={isModalVisible}
+    onCancel={handleCancel}
+    footer={null}
+  >
+    {selectedUser && (
+      <BadgeForm 
+        activityInfo={activityInfo}
+        user={selectedUser}
+        onFormSubmit={handleFormSubmit}
+      />
+    )}
+  </Modal>
+</>
   );
 };
 
