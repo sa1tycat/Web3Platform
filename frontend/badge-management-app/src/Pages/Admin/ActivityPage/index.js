@@ -60,10 +60,11 @@ const ActivityPage = () => {
           </Card>
         </Col>
       )) : (
-        <div className="activityPage-loading">
-          <Spin size="large" tip="正在加载活动数据，请稍候..." />
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
+          <Spin tip="正在加载活动数据，请稍候..." size="large" />
         </div>
-      )}
+      )
+      }
     </Row>
   );
 };

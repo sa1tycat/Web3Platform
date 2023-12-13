@@ -1,4 +1,5 @@
 import Web3 from 'web3';
+import processAndSendData from '../Process'
 
 const contractABI = [
 	{
@@ -703,108 +704,30 @@ const handleMintBadges = async (badgeArray, badgesCreation) => {
 		const userAccount = accounts[0];
   
 		const receipt = await contract.methods.mintNFT(badgeArray).send({ from: userAccount, gas: 3000000 });
-		console.log("Receipt:", receipt);
+		/* console.log("Receipt:", receipt); */
   
 		if (receipt.events && receipt.events.TokenMinted) {
 			let events = receipt.events.TokenMinted;
 			if (!Array.isArray(events)) {
 			  events = [events]; // 确保events是一个数组
 			}
-			const processedData = [];
-		  
-			events.forEach((event) => {
-				// 这里打印每个事件的返回值
-				console.log("Token Minted:", event.returnValues);
-				const eventBadgeID = Number(event.returnValues.recipient);
-				console.log('badgeid',eventBadgeID);
-            	const badgeCreation = badgesCreation.find(b => b.badgeID === eventBadgeID);
-
-            	if (badgeCreation) {
-                	processedData.push({
-                    	badgeID: badgeCreation.badgeID,
-                    	userID: badgeCreation.userID,
-                    	tokenID: Number(event.returnValues.tokenID)
-				
-				// 其他代码...
-			  	});
-				}
-				console.log(' Data to send:', processedData);
-			});
-			console.log("events:", events);
-			console.log("events:", events.returnValues);
-			
-		  
-			console.log('Processed Data to send:', processedData);
-		  
-			// 发送数据到后端API
-			fetch('https://api.campusblock.space/api/admin/update-badges-tokenID', {
-			  method: 'POST',
-			  headers: {
-				'Content-Type': 'application/json'
-			  },
-			  body: JSON.stringify({ badges: processedData })
-			})
-			.then(response => response.json())
-			.then(data => {
-			  if (data.success) {
-				console.log('Badge token IDs updated successfully:', data);
-			  } else {
-				console.error('Failed to update badge token IDs:', data.message);
-			  }
-			})
-			.catch((error) => {
-			  console.error('Error sending badge token IDs:', error);
-			});
-		  }
-	
-		  
-
-		  // 处理事件返回值
-		  /* const processedData = events.map(event => {
-			// 将事件中的badgeID转换成Number类型
-			const eventBadgeID = Number(event.returnValues.badgeID);
-			// 查找badgesCreation数组中对应badgeID的对象
-			const badgeCreation = badgesCreation.find(b => b.badgeID === eventBadgeID);
-			
-			if (badgeCreation) {
-			  // 如果找到匹配项，返回一个包含userID和tokenID的对象
-			  return {
-				badgeID: badgeCreation.badgeID, // 这里使用badgeCreation中的badgeID确保类型匹配
-				userID: badgeCreation.userID,
-				tokenID: Number(event.returnValues.tokenID) // 将事件中的tokenID转换成Number类型
-			  };
-			}
-			
-			return null; // 如果没有找到匹配项，则返回null
-		  }).filter(item => item != null); // 过滤掉任何可能出现的null值
-	  
-  
-		  console.log('发送的token数组',processedData);
-		  // 发送数据到后端API
-		  fetch('https://api.campusblock.space/api/admin/update-badges-tokenID', {
-			method: 'POST',
-			headers: {
-			  'Content-Type': 'application/json'
-			},
-			body: JSON.stringify({ badges: processedData })
-		  })
-		  .then(response => response.json())
-		  .then(data => {
-			if (data.success) {
-			  console.log('Badge token IDs updated successfully:', data);
-			  console.log('发送的token数组',processedData);
+			    // 新建数组用于收集每个event.returnValues
+				const collectedReturnValues = [];
+				events.forEach((event) => {
+					// 收集event.returnValues
+					collectedReturnValues.push(event.returnValues);
+					/* console.log("Token Minted的数组:", event.returnValues); */
+				});
+				// 打印整个收集到的数组
+				// const collectedReturnValues = events.map(event => ({
+				// 	badgeID: event.returnValues.badgeID.toString(),
+				// 	tokenID: event.returnValues.tokenID.toString()
+				//   }));
+				/* console.log("自己生成的数组:", collectedReturnValues); */
+				processAndSendData(collectedReturnValues, badgesCreation);
 			} else {
-			  console.error('Failed to update badge token IDs:', data.message);
-			}
-		  })
-		  .catch((error) => {
-			console.error('Error sending badge token IDs:', error);
-		  }); */
-  
-		 else {
 		  console.log("No TokenMinted event found in receipt.");
 		}
-  
 	  } catch (error) {
 		console.error("Error:", error);
 	  }
