@@ -25,17 +25,24 @@ const ActivityPage = () => {
     const filteredActivities = activities.filter(activity => activity.ActivityID !== activityId);
     setActivities(filteredActivities); // 更新状态
   };
+
+  const cardStyle = {
+    width: '100%',
+    textAlign: 'center',
+    minHeight: '100%', // 设置最小高度为100%
+  };
+
+
   return (
-    <Row gutter={[16, 16]} justify="start">
+    <Row gutter={[16, 16]} justify="start" align="stretch"> {/* 添加 align 属性 */}
       {activities.length > 0 ? activities.map((activity) => (
         <Col key={activity.ActivityID} xs={24} sm={12} lg={8} xl={6}>
           <Card
             hoverable
-            style={{ width: 240, textAlign: 'center' }} // 设置卡片宽度和文本居中
+            style={cardStyle} // 应用自定义样式
             actions={[
               <Button key="edit" type="primary" onClick={() => handleNavigate(activity.ActivityID)}>编辑</Button>,
-               // 使用 DeleteActivityButton 组件并传递 handleDeleteSuccess
-               <DeleteActivityButton key="delete" activityId={activity.ActivityID} onDeleteSuccess={handleDeleteSuccess} />
+              <DeleteActivityButton key="delete" activityId={activity.ActivityID} onDeleteSuccess={handleDeleteSuccess} />
             ]}
           >
             <Card.Meta
@@ -50,7 +57,7 @@ const ActivityPage = () => {
             />
           </Card>
         </Col>
-      )) : <p>Loading activities...</p>} {/* 当活动数组为空时显示加载提示 */}
+      )) : <p>Loading activities...</p>}
     </Row>
   );
 };
