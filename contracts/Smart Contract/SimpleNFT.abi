@@ -176,6 +176,11 @@
 						"internalType": "uint256",
 						"name": "tokenID",
 						"type": "uint256"
+					},
+					{
+						"internalType": "address",
+						"name": "recipient",
+						"type": "address"
 					}
 				],
 				"internalType": "struct SimpleNFT.BadgeTokenPair[]",
@@ -402,22 +407,27 @@
 		"anonymous": false,
 		"inputs": [
 			{
+				"components": [
+					{
+						"internalType": "uint256",
+						"name": "badgeID",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "tokenID",
+						"type": "uint256"
+					},
+					{
+						"internalType": "address",
+						"name": "recipient",
+						"type": "address"
+					}
+				],
 				"indexed": false,
-				"internalType": "uint256",
-				"name": "badgeID",
-				"type": "uint256"
-			},
-			{
-				"indexed": false,
-				"internalType": "uint256",
-				"name": "tokenID",
-				"type": "uint256"
-			},
-			{
-				"indexed": false,
-				"internalType": "address",
-				"name": "recipient",
-				"type": "address"
+				"internalType": "struct SimpleNFT.BadgeTokenPair[]",
+				"name": "",
+				"type": "tuple[]"
 			}
 		],
 		"name": "TokenMinted",
