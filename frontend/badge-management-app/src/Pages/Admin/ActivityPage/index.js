@@ -3,6 +3,7 @@ import { Card, Button, Row, Col } from 'antd';
 import moment from 'moment'; // 用于格式化日期
 import { useNavigate } from 'react-router-dom';
 import { getActivity } from '../../../API/getActivity';
+import DeleteActivityButton from './DeleteActivityButton'
 
 const ActivityPage = () => {
   const [activities, setActivities] = useState([]);
@@ -19,6 +20,11 @@ const ActivityPage = () => {
     navigate(`/admin/activity/${activityId}`);
   };
 
+  const handleDeleteSuccess = (activityId) => {
+    // 过滤掉被删除的活动
+    const filteredActivities = activities.filter(activity => activity.ActivityID !== activityId);
+    setActivities(filteredActivities); // 更新状态
+  };
   return (
     <Row gutter={[16, 16]} justify="start">
       {activities.length > 0 ? activities.map((activity) => (
@@ -28,7 +34,8 @@ const ActivityPage = () => {
             style={{ width: 240, textAlign: 'center' }} // 设置卡片宽度和文本居中
             actions={[
               <Button key="edit" type="primary" onClick={() => handleNavigate(activity.ActivityID)}>编辑</Button>,
-              <Button key="delete" type="danger">删除</Button>
+               // 使用 DeleteActivityButton 组件并传递 handleDeleteSuccess
+               <DeleteActivityButton key="delete" activityId={activity.ActivityID} onDeleteSuccess={handleDeleteSuccess} />
             ]}
           >
             <Card.Meta
