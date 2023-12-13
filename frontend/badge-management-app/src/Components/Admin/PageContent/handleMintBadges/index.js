@@ -687,132 +687,130 @@ const contractABI = [
 		"type": "function"
 	}
 ]; // 智能合约ABI
-  const contractAddress = "0x03F542c29FcbF89D257a40333a8c71f928277eFE";
+const contractAddress = "0x03F542c29FcbF89D257a40333a8c71f928277eFE";
 
-  const handleMintBadges = async (badgeArray) => {
-    if (typeof window.ethereum !== "undefined") {
-      const web3 = new Web3(window.ethereum);
-      const contract = new web3.eth.Contract(contractABI, contractAddress);
+const handleMintBadges = async (badgeArray, badgesCreation) => {
+	if (typeof window.ethereum !== "undefined") {
+	  const web3 = new Web3(window.ethereum);
+	  const contract = new web3.eth.Contract(contractABI, contractAddress);
   
-      try {
-        const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
-        if (accounts.length === 0) {
-          console.log("No accounts found. Make sure MetaMask is logged in.");
-          return;
-        }
-        const userAccount = accounts[0];
-        var badgeArray = [
-          {
-            badgeID: 170,
-            recipient: "0x4B20993Bc481177ec7E8f571ceCaE8A9e22C02db",
-            metadataURI: "https://api.campusblock.space/files/jsons/metadata-1-1-1702399369983.json",
-          },
-          {
-            badgeID: 172,
-            recipient: "0x78731D3Ca6b7E34aC0F824c42a7cC18A495cabaB",
-            metadataURI: "https://api.campusblock.space/files/jsons/metadata-4-1-1702399369993.json",
-          },
-          // ... 你可以继续添加更多的映射对象
-        ]; 
-        console.log("⚠️ 如果您的账户是第一次运行，请联系管理者加入到白名单。");
-        // const tx = await contract.methods.addToWhitelist(userAccount).send({ from: userAccount, gas: 300000 });
-        // console.log("Transaction:", tx);
-        console.log("badgeArray:",badgeArray);
-        const receipt = await contract.methods.mintNFT(badgeArray).send({ from: userAccount, gas: 3000000 });
-        console.log("Receipt:", receipt);
+	  try {
+		const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
+		if (accounts.length === 0) {
+		  console.log("No accounts found. Make sure MetaMask is logged in.");
+		  return;
+		}
+		const userAccount = accounts[0];
   
-        if (receipt.events && receipt.events.TokenMinted) {
-          let events = receipt.events.TokenMinted;
-          if (!Array.isArray(events)) {
-            events = [events];
-          }
-          events.forEach((event) => {
-            console.log("Token Minted:", event.returnValues);
-    
-            function processEventReturnValues(eventValues) {
-              // 将BigInt转换为Number
-              const badgeID = Number(eventValues.badgeID);
-              const tokenID = Number(eventValues.tokenID);
-            
-              return {
-                badges: [
-                  {
-                    badgeID,
-                    tokenID
-                  }
-                  // 如果有更多badges，继续添加到数组中
-                ]
-              };
-            }
-            
-            const eventData = processEventReturnValues(event.returnValues);
-            
-            function postEventDataToBackend(eventData) {
-              fetch('https://api.campusblock.space/api/admin/update-badges-tokenID', {
-                method: 'POST',
-                headers: {
-                  'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(eventData)
-              })
-              .then(response => response.json())
-              .then(data => {
-                console.log('Success:', data);
-              })
-              .catch((error) => {
-                console.error('Error:', error);
-              });
-            }
-            
-            postEventDataToBackend(eventData);
-          });
-        } else {
-          console.log("No TokenMinted event found in receipt.");
-        }
+		const receipt = await contract.methods.mintNFT(badgeArray).send({ from: userAccount, gas: 3000000 });
+		console.log("Receipt:", receipt);
   
-      } catch (error) {
-        console.error("Error:", error);
-      }
-    } else {
-      console.log("MetaMask is not installed!");
-    }
+		if (receipt.events && receipt.events.TokenMinted) {
+			let events = receipt.events.TokenMinted;
+			if (!Array.isArray(events)) {
+			  events = [events]; // 确保events是一个数组
+			}
+			const processedData = [];
+		  
+			events.forEach((event) => {
+				// 这里打印每个事件的返回值
+				console.log("Token Minted:", event.returnValues);
+				const eventBadgeID = Number(event.returnValues.recipient);
+				console.log('badgeid',eventBadgeID);
+            	const badgeCreation = badgesCreation.find(b => b.badgeID === eventBadgeID);
+
+            	if (badgeCreation) {
+                	processedData.push({
+                    	badgeID: badgeCreation.badgeID,
+                    	userID: badgeCreation.userID,
+                    	tokenID: Number(event.returnValues.tokenID)
+				
+				// 其他代码...
+			  	});
+				}
+				console.log(' Data to send:', processedData);
+			});
+			console.log("events:", events);
+			console.log("events:", events.returnValues);
+			
+		  
+			console.log('Processed Data to send:', processedData);
+		  
+			// 发送数据到后端API
+			fetch('https://api.campusblock.space/api/admin/update-badges-tokenID', {
+			  method: 'POST',
+			  headers: {
+				'Content-Type': 'application/json'
+			  },
+			  body: JSON.stringify({ badges: processedData })
+			})
+			.then(response => response.json())
+			.then(data => {
+			  if (data.success) {
+				console.log('Badge token IDs updated successfully:', data);
+			  } else {
+				console.error('Failed to update badge token IDs:', data.message);
+			  }
+			})
+			.catch((error) => {
+			  console.error('Error sending badge token IDs:', error);
+			});
+		  }
+	
+		  
+
+		  // 处理事件返回值
+		  /* const processedData = events.map(event => {
+			// 将事件中的badgeID转换成Number类型
+			const eventBadgeID = Number(event.returnValues.badgeID);
+			// 查找badgesCreation数组中对应badgeID的对象
+			const badgeCreation = badgesCreation.find(b => b.badgeID === eventBadgeID);
+			
+			if (badgeCreation) {
+			  // 如果找到匹配项，返回一个包含userID和tokenID的对象
+			  return {
+				badgeID: badgeCreation.badgeID, // 这里使用badgeCreation中的badgeID确保类型匹配
+				userID: badgeCreation.userID,
+				tokenID: Number(event.returnValues.tokenID) // 将事件中的tokenID转换成Number类型
+			  };
+			}
+			
+			return null; // 如果没有找到匹配项，则返回null
+		  }).filter(item => item != null); // 过滤掉任何可能出现的null值
+	  
+  
+		  console.log('发送的token数组',processedData);
+		  // 发送数据到后端API
+		  fetch('https://api.campusblock.space/api/admin/update-badges-tokenID', {
+			method: 'POST',
+			headers: {
+			  'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({ badges: processedData })
+		  })
+		  .then(response => response.json())
+		  .then(data => {
+			if (data.success) {
+			  console.log('Badge token IDs updated successfully:', data);
+			  console.log('发送的token数组',processedData);
+			} else {
+			  console.error('Failed to update badge token IDs:', data.message);
+			}
+		  })
+		  .catch((error) => {
+			console.error('Error sending badge token IDs:', error);
+		  }); */
+  
+		 else {
+		  console.log("No TokenMinted event found in receipt.");
+		}
+  
+	  } catch (error) {
+		console.error("Error:", error);
+	  }
+	} else {
+	  console.log("MetaMask is not installed!");
+	}
   };
-  
-  /* function processEventReturnValues(eventValues) {
-    // 将BigInt转换为Number
-    const badgeID = Number(eventValues.badgeID);
-    const tokenID = Number(eventValues.tokenID);
-  
-    return {
-      badges: [
-        {
-          badgeID,
-          tokenID
-        }
-        // 如果有更多badges，继续添加到数组中
-      ]
-    };
-  }
-  
-  const eventData = processEventReturnValues(event.returnValues);
-  
-  function postEventDataToBackend(eventData) {
-    fetch('您的后端API URL', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(eventData)
-    })
-    .then(response => response.json())
-    .then(data => {
-      console.log('Success:', data);
-    })
-    .catch((error) => {
-      console.error('Error:', error);
-    });
-  }
-  
-  postEventDataToBackend(eventData); */
   
   export default handleMintBadges;

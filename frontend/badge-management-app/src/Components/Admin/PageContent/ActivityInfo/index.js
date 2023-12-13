@@ -63,13 +63,14 @@ const ActivityInfoCard = ({ activityID, onBack }) => {
       if (!response.ok) throw new Error('Network response was not ok.');
       const data = await response.json();
 
+      console.log('传回的data',data);
       // if (data.success) {
       //   message.success('所有徽章信息提交成功');
       if (data.success && data.badgesCreation) {
         const badgeArray = generateBadgeArray(users, data.badgesCreation);
         console.log('生成的徽章数组',badgeArray);
         // setBadgeArray(data.badgesCreation);
-        handleMintBadges(badgeArray);
+        handleMintBadges(badgeArray,data.badgesCreation);
       } else {
         message.error('提交失败: ' + data.message);
       }
