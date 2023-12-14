@@ -1,10 +1,9 @@
-import { Typography } from "antd";
+import React from 'react';
+import ChatBox from './components/ChatBox';
 
 function UpdatePage() {
     return (
-        <div>
-            <Typography.Title level={4}>UpdatePage</Typography.Title>
-        </div>
+            <ChatBox />
     );
 }
 export default UpdatePage;
