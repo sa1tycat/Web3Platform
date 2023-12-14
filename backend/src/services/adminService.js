@@ -64,31 +64,30 @@ const getActivityParticipants = async (activityID) => {
   return participants;
 };
 
-// TODO: 实现 findMetadata 正确功能
-// 注意：当前只是测试代码，实际应用中需要修改
-const findMetadata = async (badge) => {
+// 获取默认 Metadata
+const getMetadata = async () => {
   const metadata = {
-    title: "Programming Star",
+    title: "Default Title",
     description:
-      "This badge is for Zhang San winning the 1st prize in 2023 Programming Contest.",
+      "This is a default badge.",
     image: "https://api.campusblock.space/files/images/test.png",
-    activity: "Programming Contest",
+    activity: "Default activity",
     attributes: [
       {
         trait_type: "Image",
-        value: "Senior",
+        value: "Freshmen",
       },
       {
         trait_type: "Expression",
-        value: "Smile",
+        value: "Neutral",
       },
       {
         trait_type: "Accessories",
-        value: "Headphones",
+        value: "Tie",
       },
       {
         trait_type: "Achievement",
-        value: "Programming",
+        value: "Compass",
       },
       {
         trait_type: "Medal",
@@ -96,7 +95,7 @@ const findMetadata = async (badge) => {
       },
       {
         trait_type: "Background",
-        value: "Laboratory",
+        value: "Library",
       },
     ],
   };
@@ -111,9 +110,70 @@ const modifyMetadata = (metadata, badgeInfo) => {
   return metadata;
 };
 
+// 根据属性获得对应图片存储名字
+const getImageName = (attributes) => {
+  let imageName = "";
+  const imageNames = {
+    accessories: {
+      "Scarf": "A",
+      "Tie": "B",
+      "Default": "B"
+    },
+    achievement: {
+      "Compass": "A",
+      "Paper": "B",
+      "Default": "B"
+    },
+    background:{
+      "Bell Tower": "A",
+      "Library": "B",
+      "Playground": "C",
+      "Concert Hall": "D",
+      "Laboratory": "E",
+      "Star Sky": "F",
+      "Default": "B"
+    },
+    expression: {
+      "Excied": "A",
+      "Laughing": "B",
+      "Neutral": "C",
+      "Smile": "D",
+      "Thinking": "E",
+      "Winking": "F",
+      "Default": "C"
+    },
+    image: {
+      "Freshman": "A",
+      "Junior": "B",
+      "Postgraduate": "C",
+      "Senior": "D",
+      "Sophomore": "E",
+      "Default": "A"
+    },
+    medal: {
+      "Innovator": "A",
+      "Volunteer": "B",
+      "Default": "A"
+    },
+  };
+
+  // 按照imageNames中的顺序遍历
+  for (const category in imageNames) {
+    if (imageNames.hasOwnProperty(category)) {
+      const attrValue = attributes[category];
+      imageName += (imageNames[category][attrValue] || imageNames[category]["Default"]);
+    }
+  }
+
+  imageName += ".png";
+  console.log('imageName', imageName)
+  return imageName;
+};
+
 const modedifyMetadataTest = (metadata, badgeInfo) => {
   metadata.title = badgeInfo.title;
   metadata.description = badgeInfo.description;
+  metadata.image = "https://api.campusblock.space/files/images/tmp/" + getImageName(badgeInfo.attributes);
   // 将 metadata 中的 attributes 替换为 badgeInfo 中的 attributes
   metadata.attributes.forEach((attr) => {
     // 将 trait_type 的首字母小写并与 badgeInfo.attributes 中的键进行匹配
@@ -131,11 +191,12 @@ const createBadges = async (activityID, badges) => {
   let badgesCreation = [];
   try {
     for (const badge of badges) {
-      // 查找预生成的 Metadata
-      const originalMetadata = await findMetadata(badge.badgeInfo);
+      console.log('badge', badge);
+      // 获取默认 Metadata
+      const defaultMetadata = await getMetadata();
       
       // 修改 Metadata 字段
-      const modifiedMetadata = modedifyMetadataTest(originalMetadata, badge.badgeInfo);
+      const modifiedMetadata = modedifyMetadataTest(defaultMetadata, badge.badgeInfo);
       
       // 插入活动名字字段
       const activity = await ActivityModel.findActivityByID(activityID); // 获得活动信息
