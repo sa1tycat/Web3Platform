@@ -27,10 +27,9 @@ const ctx = canvas.getContext("2d");
 ctx.imageSmoothingEnabled = format.smoothing;
 var metadataList = [];
 var attributesList = [];
-const DNA_DELIMITER = "-";
-const HashlipsGiffer = require(`${basePath}/modules/HashlipsGiffer.js`);
+const DNA_DELIMITER = "-"; 
 // DNA配置字符串，每个字符代表一个位置可能的字符数量
-const dnaConfig = "ABCCACC";
+const dnaConfig = "FEFBBB";
 // 映射配置字符串中的每个字符到可能的字符数组
 // 字母到数字的映射规则
 const letterToNumber = (letter) => letter.charCodeAt(0) - 'A'.charCodeAt(0);
