@@ -8,7 +8,7 @@ const ActivityDetailPage = () => {
   const navigate = useNavigate();
 
   return (
-    <div>
+    <div className="PageContent"> {/* 确保这个类名匹配您的 CSS */}
       <ActivityInfoCard 
         activityID={activityID} 
         onBack={() => navigate(-1)}

@@ -24,15 +24,14 @@ const solanaMetadata = {
 // If you have selected Solana then the collection starts from 0 automatically
 const layerConfigurations = [
   {
-    growEditionSizeTo: 62,
+    growEditionSizeTo: 1440,
     layersOrder: [
       { name: "Background" },
-      { name: "Eyeball" },   
-      { name: "Eye color" },
-      { name: "Iris" },
-      { name: "Shine" },
-      { name: "Bottom lid" },
-      { name: "Top lid" },
+      { name: "Image" },   
+      { name: "Expression" },
+      { name: "Medal" },
+      { name: "Accessories" },
+      { name: "Achievement" },
     ],
   },
 ];
@@ -43,40 +42,47 @@ const configMapping = {
   C: ['A', 'B', 'C'],
   D: ['A', 'B', 'C', 'D'],
   E: ['A', 'B', 'C', 'D', 'E'],
+  F: ['A', 'B', 'C', 'D', 'E', 'F'],
+  G: ['A', 'B', 'C', 'D', 'E', 'F', 'G'],
   // ...可以继续添加更多的映射
 };
 
 // 假设的图片名称映射
 const imageNames = {
-  "Background": {
-    "A": "A_Black#1.png"
+  "Accessories": {
+    "A": "A_Scarf#1.png",
+    "B": "B_Tie#1.png"
   },
-  "Eyeball": {
-    "A": "A_Red#50.png",
-    "B": "B_White#50.png"
+  "Achievement": {
+    "A": "A_Compass#1.png",
+    "B": "B_Paper#1.png"
   },
-  "Eye color":{
-    "A": "A_Cyan#1.png",
-    "B": "B_Green#1.png",
-    "C": "C_Pink#1.png"
+  "Background":{
+    "A": "A_BellTower#1.png",
+    "B": "B_Library#1.png",
+    "C": "C_Playground#1.png",
+    "D": "D_ConcertHall#1.png",
+    "E": "E_Laboratory#1.png",
+    "F": "F_StarSky#1.png"
   },
-  "Iris": {
-    "A": "A_Large#20.png",
-    "B": "B_Medium#20.png",
-    "C": "C_Small#20.png"
+  "Expression": {
+    "A": "A_Excied#1.png",
+    "B": "B_Laughing#1.png",
+    "C": "C_Neutral#1.png",
+    "D": "D_Smile#1.png",
+    "E": "E_Thinking#1.png",
+    "F": "F_Winking#1.png"
   },
-  "Shine":{
-    "A": "A_Shapes#100.png"
+  "Image":{
+    "A": "A_Freshman#1.png",
+    "B": "B_Junior#1.png",
+    "C": "C_Postgraduate#1.png",
+    "D": "D_Senior#1.png",
+    "E": "E_Sophomore#1.png"
   },
-  "Bottom lid":{
-    "A": "A_High#20.png",
-    "B": "B_Low#20.png",
-    "C": "C_Middle#20.png"
-  },
-  "Top lid":{
-    "A": "A_High#30.png",
-    "B": "B_Low#30.png",
-    "C": "C_Middle#30.png"
+  "Medal":{
+    "A": "A_Innovator#1.png",
+    "B": "B_Volunteer#1.png"
   },
 };
 

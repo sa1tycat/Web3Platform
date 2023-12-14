@@ -20,6 +20,7 @@ contract SimpleNFT is ERC721URIStorage, Ownable {
     struct BadgeTokenPair {
         uint badgeID;
         uint256 tokenID;
+        address recipient;
     }
 
     constructor() ERC721("SimpleNFT", "SNFT") Ownable(msg.sender) {}
@@ -32,7 +33,7 @@ contract SimpleNFT is ERC721URIStorage, Ownable {
         whitelist[_address] = false;
     }
 
-    event TokenMinted(uint256 badgeID, uint256 tokenID, address recipient);
+    event TokenMinted(BadgeTokenPair[]);
 
     function mintNFT(BadgeInfo[] memory badges)
         public 
@@ -47,12 +48,12 @@ contract SimpleNFT is ERC721URIStorage, Ownable {
         _setTokenURI(tokenId, badges[i].metadataURI);
         badgeTokenPairs[i] = BadgeTokenPair({
             badgeID: badges[i].badgeID,
-            tokenID: tokenId
+            tokenID: tokenId,
+            recipient: badges[i].recipient
         });
-
-        // Emit an event for each new minted token
-        emit TokenMinted(badges[i].badgeID, tokenId, badges[i].recipient);
     }
+    // Emit an event for each new minted token
+    emit TokenMinted(badgeTokenPairs);
     return badgeTokenPairs; // This return value is only useful for calls, not transactions
 }
 

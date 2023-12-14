@@ -699,22 +699,37 @@ window.addEventListener("load", function () {
             document.getElementById("mycontract").innerText += userAccount;
             var badgeInfo = [
               {
-                badgeID: 101,
-                recipient: userAccount,
-                metadataURI: "Your_Metadata_URI_1",
+                badgeID: 170,
+                recipient: "0x4B20993Bc481177ec7E8f571ceCaE8A9e22C02db",
+                metadataURI: "https://api.campusblock.space/files/jsons/metadata-1-1-1702399369983.json",
               },
               {
-                badgeID: 102,
-                recipient: userAccount,
-                metadataURI: "Your_Metadata_URI_2",
-              },
-              {
-                badgeID: 103,
-                recipient: userAccount,
-                metadataURI: "Your_Metadata_URI_3",
+                badgeID: 172,
+                recipient: "0x78731D3Ca6b7E34aC0F824c42a7cC18A495cabaB",
+                metadataURI: "https://api.campusblock.space/files/jsons/metadata-4-1-1702399369993.json",
               },
               // ... 你可以继续添加更多的映射对象
-            ];            
+            ]; 
+            //
+            /* var badgeInfo = [
+              {
+                badgeID: 170,
+                recipient: "0x4B20993Bc481177ec7E8f571ceCaE8A9e22C02db",
+                metadataURI: "https://api.campusblock.space/files/jsons/metadata-1-1-1702399369983.json",
+              },
+              {
+                badgeID: 171,
+                recipient: "0x4B20993Bc481177ec7E8f571ceCaE8A9e22C02db",
+                metadataURI: "https://api.campusblock.space/files/jsons/metadata-3-1-1702399369988.json",
+              },
+              {
+                badgeID: 172,
+                recipient: "0x78731D3Ca6b7E34aC0F824c42a7cC18A495cabaB",
+                metadataURI: "https://api.campusblock.space/files/jsons/metadata-4-1-1702399369993.json",
+              },
+              // ... 你可以继续添加更多的映射对象
+            ];  */
+            console.log('数组',badgeInfo);           
             document.getElementById("mycontract").innerText += '\n badgeinfo:\n';
             document.getElementById("mycontract").innerText += badgeInfo;
             contract.methods

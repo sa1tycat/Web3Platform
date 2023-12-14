@@ -1,3 +1,4 @@
+# 为了方便调试我在此文件夹下建了一个react1，用来实现前端需要智能合约这块的功能
 ## NFTgenerate
 
 - 打开NFTgenerate文件夹

@@ -3,6 +3,9 @@ import { Card, Button, Row, Col } from 'antd';
 import moment from 'moment'; // 用于格式化日期
 import { useNavigate } from 'react-router-dom';
 import { getActivity } from '../../../API/getActivity';
+import DeleteActivityButton from './DeleteActivityButton'
+import { Spin } from 'antd';
+
 
 const ActivityPage = () => {
   const [activities, setActivities] = useState([]);
@@ -19,16 +22,29 @@ const ActivityPage = () => {
     navigate(`/admin/activity/${activityId}`);
   };
 
+  const handleDeleteSuccess = (activityId) => {
+    // 过滤掉被删除的活动
+    const filteredActivities = activities.filter(activity => activity.ActivityID !== activityId);
+    setActivities(filteredActivities); // 更新状态
+  };
+
+  const cardStyle = {
+    width: '100%',
+    textAlign: 'center',
+    minHeight: '100%', // 设置最小高度为100%
+  };
+
+
   return (
-    <Row gutter={[16, 16]} justify="start">
+    <Row gutter={[16, 16]} justify="start" align="stretch"> {/* 添加 align 属性 */}
       {activities.length > 0 ? activities.map((activity) => (
         <Col key={activity.ActivityID} xs={24} sm={12} lg={8} xl={6}>
           <Card
             hoverable
-            style={{ width: 240, textAlign: 'center' }} // 设置卡片宽度和文本居中
+            style={cardStyle} // 应用自定义样式
             actions={[
               <Button key="edit" type="primary" onClick={() => handleNavigate(activity.ActivityID)}>编辑</Button>,
-              <Button key="delete" type="danger">删除</Button>
+              <DeleteActivityButton key="delete" activityId={activity.ActivityID} onDeleteSuccess={handleDeleteSuccess} />
             ]}
           >
             <Card.Meta
@@ -43,7 +59,12 @@ const ActivityPage = () => {
             />
           </Card>
         </Col>
-      )) : <p>Loading activities...</p>} {/* 当活动数组为空时显示加载提示 */}
+      )) : (
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
+          <Spin tip="正在加载活动数据，请稍候..." size="large" />
+        </div>
+      )
+      }
     </Row>
   );
 };
