@@ -113,17 +113,10 @@ const modifyMetadata = (metadata, badgeInfo) => {
 // 根据属性获得对应图片存储名字
 const getImageName = (attributes) => {
   let imageName = "";
+
+  // 这个参数的具体顺序需要看图像生成的 layerConfigurations
+  // TODO: 完善属性列表，最好可以实现自定义添加的功能
   const imageNames = {
-    accessories: {
-      "Scarf": "A",
-      "Tie": "B",
-      "Default": "B"
-    },
-    achievement: {
-      "Compass": "A",
-      "Paper": "B",
-      "Default": "B"
-    },
     background:{
       "Bell Tower": "A",
       "Library": "B",
@@ -132,6 +125,14 @@ const getImageName = (attributes) => {
       "Laboratory": "E",
       "Star Sky": "F",
       "Default": "B"
+    },
+    image: {
+      "Freshman": "A",
+      "Junior": "B",
+      "Postgraduate": "C",
+      "Senior": "D",
+      "Sophomore": "E",
+      "Default": "A"
     },
     expression: {
       "Excied": "A",
@@ -142,18 +143,20 @@ const getImageName = (attributes) => {
       "Winking": "F",
       "Default": "C"
     },
-    image: {
-      "Freshman": "A",
-      "Junior": "B",
-      "Postgraduate": "C",
-      "Senior": "D",
-      "Sophomore": "E",
-      "Default": "A"
-    },
     medal: {
       "Innovator": "A",
       "Volunteer": "B",
       "Default": "A"
+    },
+    accessories: {
+      "Scarf": "A",
+      "Tie": "B",
+      "Default": "B"
+    },
+    achievement: {
+      "Compass": "A",
+      "Paper": "B",
+      "Default": "B"
     },
   };
 
