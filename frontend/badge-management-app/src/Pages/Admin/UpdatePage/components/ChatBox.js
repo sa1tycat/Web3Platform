@@ -1,14 +1,17 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Input, Button } from 'antd';
 import Message from './Message';
+// import Back from './Back';
 import { sendMessage } from '../api/api';
-import { SendOutlined } from '@ant-design/icons';
+import { useNavigate } from 'react-router-dom';
+import { SendOutlined, LeftOutlined } from '@ant-design/icons';
 import styles from '../styles/ChatBox.module.css';
 
 const ChatBox = () => {
   const [input, setInput] = useState('');
   const [messages, setMessages] = useState([]);
   const messagesEndRef = useRef(null);
+  let navigate = useNavigate();
 
   // 当新消息添加时滚动到底部
   const scrollToBottom = () => {
@@ -39,6 +42,11 @@ const ChatBox = () => {
 
 return (
     <div className={styles.chatBox}>
+      {/* <Back />; */}
+      {/* 返回按钮 */}
+        <Button className={styles.backButton} type="primary" onClick={() => navigate(-1)} >
+          <LeftOutlined />
+        </Button>  
       <div className={styles.messageList}>
         {messages.map((msg, index) => (
           <Message key={index} author={msg.author} text={msg.text} />
