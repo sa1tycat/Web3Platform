@@ -2,7 +2,8 @@
 
 Web3Platform 是一个基于Web3技术的校友平台。
 
-## [在线网站](http://dd.wengjin.top)
+## [管理员](http://dd.wengjin.top)
+## [学生](http://aa.wengjin.top)
 ### 登不上去是因为浏览器定向到了https,改成http即可
 
 ## 项目结构
