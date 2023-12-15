@@ -2,7 +2,7 @@ import {
     HomeOutlined,
     ShopOutlined,
     ShoppingCartOutlined,
-    UserOutlined,
+    RobotOutlined,
   } from "@ant-design/icons";
   import { Menu } from "antd";
   //import { useEffect, useState } from "react";
@@ -35,14 +35,14 @@ import {
               key: "/alumni",
             },
             {
-              label: "活动管理",
+              label: "我的徽章",
               key: "/alumni/activity",
               icon: <ShopOutlined />,
             },
             {
-              label: "学生管理",
-              key: "/alumni/stuinfo",
-              icon: <UserOutlined />,
+              label: "AI(beta)",
+              key: "/alumni/chatbot",
+              icon: <RobotOutlined />,
             },
             {
               label: "等待更新",

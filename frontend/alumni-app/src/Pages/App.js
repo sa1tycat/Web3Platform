@@ -8,12 +8,13 @@ function App() {
   return (
     <div className="App">
       <AppHeader />
-      <div className="SideMenuAndPageContent">
-        <SideMenu></SideMenu>
-        <PageContent></PageContent>
+      <div className="MainContent">
+        <SideMenu />
+        <PageContent />
       </div>
       <AppFooter />
     </div>
   );
 }
+
 export default App;
