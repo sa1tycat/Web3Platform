@@ -8,7 +8,7 @@ function AppRoutes() {
   return (
     <Routes>
       <Route path="/alumni" element={<HomePage />}></Route>
-      <Route path="/alumni/activity" element={<ActivityPage />}></Route>
+      <Route path="/alumni/view-badges" element={<ActivityPage />}></Route>
       <Route path="/alumni/chatbot" element={<StuinfoPage />}></Route>
       <Route path="/alumni/update" element={<UpdatePage />}></Route>
     </Routes>

@@ -6,7 +6,7 @@ import {
   } from "@ant-design/icons";
   import { Menu } from "antd";
   //import { useEffect, useState } from "react";
-  import { useLocation, useNavigate } from "react-router-dom";
+  import { useNavigate } from "react-router-dom";
   
   function SideMenu() {
   //  const location = useLocation();
@@ -36,7 +36,7 @@ import {
             },
             {
               label: "我的徽章",
-              key: "/alumni/activity",
+              key: "/alumni/view-badges",
               icon: <ShopOutlined />,
             },
             {
