@@ -12,7 +12,6 @@ export const ApiKeyProvider = ({ children }) => {
       try {
         const response = await fetch('https://cc.wengjin.top/api-key');
         const data = await response.json();
-        console.log("返回的值",data);
         setApiKey(data.apiKey);
       } catch (error) {
         console.error('Failed to fetch API key', error);
