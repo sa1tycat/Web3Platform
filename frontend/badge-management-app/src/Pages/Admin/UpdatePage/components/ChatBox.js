@@ -22,7 +22,7 @@ const ChatBox = () => {
     const model = genAI.getGenerativeModel({ model: "gemini-pro" });
     const chat = model.startChat({
       generationConfig: {
-        maxOutputTokens: 100,
+        maxOutputTokens: 10000,
       },
     });
     setChatSession(chat);
