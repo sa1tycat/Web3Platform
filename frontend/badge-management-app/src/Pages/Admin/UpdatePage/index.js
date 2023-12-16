@@ -1,9 +1,13 @@
 import React from 'react';
 import ChatBox from './components/ChatBox';
+import { ApiKeyProvider } from './api/ApiKeyProvider';
 
 function UpdatePage() {
+
     return (
-            <ChatBox />
+    <ApiKeyProvider>
+      <ChatBox />
+    </ApiKeyProvider>
     );
 }
 export default UpdatePage;

@@ -4,11 +4,11 @@ import { Input, Button } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import AppHeader from './AppHeader';
 import Message from './Message';
+import { useApiKey } from '../api/ApiKeyProvider';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import { SendOutlined } from '@ant-design/icons';
 import styles from '../styles/ChatBox.module.css';
 
-const API_KEY = "AIzaSyCqvgJzXaAwiA62TKARwp4nRCY0vMVjwy4";
 
 const ChatBox = () => {
   const [input, setInput] = useState('');
@@ -16,17 +16,20 @@ const ChatBox = () => {
   const messagesEndRef = useRef(null);
   const navigate = useNavigate();
   const [chatSession, setChatSession] = useState(null);
+  const API_KEY = useApiKey();
 
   useEffect(() => {
-    const genAI = new GoogleGenerativeAI(API_KEY);
-    const model = genAI.getGenerativeModel({ model: "gemini-pro" });
-    const chat = model.startChat({
-      generationConfig: {
-        maxOutputTokens: 10000,
-      },
-    });
-    setChatSession(chat);
-  }, []);
+    if (API_KEY) { // 确保API密钥已获取
+      const genAI = new GoogleGenerativeAI(API_KEY);
+      const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+      const chat = model.startChat({
+        generationConfig: {
+          maxOutputTokens: 10000,
+        },
+      });
+      setChatSession(chat);
+    }
+  }, [API_KEY]); // 添加API_KEY作为依赖项
 
   useEffect(() => {
     scrollToBottom();
