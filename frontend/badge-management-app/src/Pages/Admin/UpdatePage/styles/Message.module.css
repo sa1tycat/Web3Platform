@@ -17,13 +17,16 @@
   /* 其他样式 */
 }
 
+
 .userMessage {
-  background-color: #89d961; /* 用户消息的绿色 */
+  background: linear-gradient(to right, #dbf4ff, #e6f2ff);
+  /* background-color: #89d961; 用户消息的绿色 */
   /* 其他样式 */
 }
 
 .botMessage {
-  background-color: #ebebeb; /* 机器人消息的白色 */
+  background: linear-gradient(to left, #cae9ff, #e6f2ff);
+  /* background-color: #ebebeb; 机器人消息的白色 */
   color: #000; /* 文字颜色 */
   /* 其他样式 */
 }
