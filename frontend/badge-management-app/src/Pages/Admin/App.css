@@ -31,12 +31,14 @@
 
 .SideMenu {
   /* 如果SideMenu的内容很少且不需要滚动，则设置overflow为hidden */
-  width: 200px; /* 调整为SideMenu的实际宽度 */
+  flex:1;
+  min-width: 80px;
+  /* width: 200px; 调整为SideMenu的实际宽度 */
   overflow-y: hidden;
-  flex-shrink: 0; /* 防止SideMenu缩小 */
+  /* flex-shrink: 0; 防止SideMenu缩小 */
 }
 .PageContent {
-  flex-grow: 1; /* 占据剩余空间 */
+  flex: 10; /* 占据剩余空间 */
   overflow-y: auto; /* 超出内容滚动 */
   padding: 20px; /* 或根据需要调整 */
 }
