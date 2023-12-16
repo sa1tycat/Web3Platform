@@ -10,7 +10,7 @@ export const ApiKeyProvider = ({ children }) => {
   useEffect(() => {
     const fetchApiKey = async () => {
       try {
-        const response = await fetch('http://142.171.199.52:3000/api-key');
+        const response = await fetch('https://cc.wengjin.top/api-key');
         const data = await response.json();
         console.log("返回的值",data);
         setApiKey(data.apiKey);
