@@ -1,10 +1,12 @@
+
 # Web3Platform
 
 Web3Platform 是一个基于Web3技术的校友平台。
 
-## [管理员](https://dd.wengjin.top)
-## [学生](https://aa.wengjin.top)
-
+# 网站链接
+- ## [管理员](https://dd.wengjin.top)
+- ## [学生](https://aa.wengjin.top)
+- ## [Ai(beta)](https://aa.wengjin.top/alumni/chatbot)
 
 ## 项目结构
 
