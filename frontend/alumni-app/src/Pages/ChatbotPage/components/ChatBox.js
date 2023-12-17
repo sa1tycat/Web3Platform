@@ -1,13 +1,12 @@
 // ChatBox.js
 import React, { useState, useRef, useEffect } from 'react';
 import { Input, Button } from 'antd';
-import { useNavigate } from 'react-router-dom';
-import AppHeader from './AppHeader';
 import Message from './Message';
-import { useApiKey } from '../api/ApiKeyProvider';
-import { GoogleGenerativeAI } from '@google/generative-ai';
 import { SendOutlined } from '@ant-design/icons';
 import styles from '../styles/ChatBox.module.css';
+import { initializeChat, sendMessage } from '../api/chatService';
+import { useNavigate } from 'react-router-dom';
+import AppHeader from './AppHeader';
 
 
 const ChatBox = () => {
@@ -15,51 +14,47 @@ const ChatBox = () => {
   const [messages, setMessages] = useState([]);
   const messagesEndRef = useRef(null);
   const navigate = useNavigate();
-  const [chatSession, setChatSession] = useState(null);
-  const API_KEY = useApiKey();
-
-  useEffect(() => {
-    if (API_KEY) { // 确保API密钥已获取
-      const genAI = new GoogleGenerativeAI(API_KEY);
-      const model = genAI.getGenerativeModel({ model: "gemini-pro" });
-      const chat = model.startChat({
-        generationConfig: {
-          maxOutputTokens: 10000,
-        },
-      });
-      setChatSession(chat);
-    }
-  }, [API_KEY]); // 添加API_KEY作为依赖项
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
 
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
 
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  };
+  
+  useEffect(() => {
+    // 初始化聊天会话
+    const initChat = async () => {
+      const initialized = await initializeChat();
+      if (!initialized) {
+        console.error('Chat initialization failed');
+        // 处理初始化失败的情况，比如显示错误消息
+      }
+    };
+    initChat();
+  }, []);
 
+  // 发送消息处理函数
   const handleSend = async () => {
     if (!input.trim()) return;
-
+  
+    // 添加用户消息到聊天列表
     const userMessage = { author: 'user', text: input };
-    setMessages(m => [...m, userMessage]);
-
-    if (chatSession) {
-      try {
-        const result = await chatSession.sendMessage(input);
-        const response = await result.response;
-        const botText = await response.text();
-        const botMessage = { author: 'bot', text: botText };
-        setMessages(m => [...m, botMessage]);
-      } catch (error) {
-        setMessages(m => [...m, { author: 'bot', text: '注意：敏感词！' }]);
-      }
+    setMessages(messages => [...messages, userMessage]);
+    setInput(''); // 清空输入框
+  
+    try {
+      const reply = await sendMessage(input);
+      // 添加机器人的答复到聊天列表
+      const botMessage = { author: 'bot', text: reply };
+      setMessages(messages => [...messages, botMessage]);
+    } catch (error) {
+      console.error('Error sending message:', error);
+      // 在这里可以处理错误，比如显示一条错误消息
+      setMessages(messages => [...messages, { author: 'bot', text: '通信错误，请稍后再试。' }]);
     }
-
-    setInput('');
   };
-
   return (
     <div className={styles.chatBox}>
       <AppHeader onBack={() => navigate(-1)} />
