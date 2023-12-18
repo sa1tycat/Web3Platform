@@ -1,0 +1,45 @@
+.message {
+  display: inline-block;
+  padding: 0px 10px;
+  border-radius: 20px;
+  margin-bottom: 10px;
+  word-break: break-word;
+  max-width: 60%;
+  min-width: 50px; /* 设置最小宽度以保持圆角 */
+  width: max-content; /* 这将使得气泡的宽度与内容的宽度相匹配 */
+}
+.userMessage, .botMessage {
+  padding: 0px 10px;
+  margin-bottom: 10px;
+  word-break: break-word;
+  border-radius: 15px; /* 设置圆角 */
+  max-width: 60%;
+  /* 其他样式 */
+}
+
+
+.userMessage {
+  background: linear-gradient(to right, #dbf4ff, #e6f2ff);
+  /* background-color: #89d961; 用户消息的绿色 */
+  /* 其他样式 */
+}
+
+.botMessage {
+  background: linear-gradient(to left, #cae9ff, #e6f2ff);
+  /* background-color: #ebebeb; 机器人消息的白色 */
+  color: #000; /* 文字颜色 */
+  /* 其他样式 */
+}
+
+.userContainer, .botContainer {
+  /* 仅用于定位，不设置圆角 */
+  display: flex;
+}
+
+.userContainer {
+  justify-content: flex-end;
+}
+
+.botContainer {
+  justify-content: flex-start;
+}
