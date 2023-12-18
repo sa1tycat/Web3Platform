@@ -123,7 +123,7 @@ const getImageName = (attributes) => {
       "Playground": "C",
       "Concert Hall": "D",
       "Laboratory": "E",
-      "Star Sky": "F",
+      "Starry Night": "F",
       "Default": "B"
     },
     image: {
