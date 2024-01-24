@@ -67,10 +67,26 @@ const findActivityByID = async (activityID) => {
   }
 };
 
+// 根据用户 ID 判断是否已报名参加活动
+const isUserRegisteredForActivity = async (userID, activityID) => {
+  try {
+    const [rows] = await db.query(
+      "SELECT * FROM UserActivities WHERE UserID = ? AND ActivityID = ?",
+      [userID, activityID]
+    );
+
+    return rows.length > 0;
+  } catch (error) {
+    console.error("Error in isUserRegisteredForActivity:", error);
+    throw error;
+  }
+};
+
 
 module.exports = {
   viewActivity,
   createActivity,
   updateActivity,
   findActivityByID,
+  isUserRegisteredForActivity,
 };

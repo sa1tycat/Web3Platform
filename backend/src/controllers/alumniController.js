@@ -1,4 +1,5 @@
 const userService = require("../services/userService");
+const activityService = require("../services/activityService");
 
 // 绑定DID到学号
 const bindStudentId = async (req, res) => {
@@ -35,6 +36,28 @@ const viewBadges = async (req, res) => {
   }
 };
 
+// 查看活动
+const viewActivities = async (req, res) => {
+  try {
+    const userID = req.body.userID; // 从请求体获取userID
+    const activities = await activityService.viewActivitiesWithStatus(userID);
+
+    res.json({
+      success: true,
+      message: 'Activities fetched successfully',
+      activities
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: 'Failed to fetch activities',
+      error: error.message
+    });
+  }
+};
+
+
+
 // 参加活动
 const joinActivity = async (req, res) => {
   try {
@@ -60,5 +83,6 @@ const joinActivity = async (req, res) => {
 module.exports = {
   bindStudentId,
   viewBadges,
+  viewActivities,
   joinActivity,
 };
