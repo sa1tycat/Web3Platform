@@ -41,13 +41,12 @@ const joinActivity = async (req, res) => {
     const { userID, activityID } = req.body;
     const result = await userService.joinActivity(userID, activityID);
 
-    if (result) {
+    if (result.success) {
       res.json({ success: true, message: 'Successfully registered for the activity' });
     } else {
-      res.json({ success: false, message: 'Failed to register for the activity' });
+      res.json({ success: false, message: result.message });  // 使用从服务层返回的消息
     }
   } catch (error) {
-    // 重复报名活动
     if (error.code === 'ER_DUP_ENTRY') {
       res.status(400).json({ success: false, message: 'You have already registered for this activity' });
     } else {
@@ -55,6 +54,7 @@ const joinActivity = async (req, res) => {
     }
   }
 };
+
 
 
 module.exports = {

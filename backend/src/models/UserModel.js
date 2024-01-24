@@ -64,14 +64,27 @@ const viewBadges = async (userID) => {
 // 参加活动
 const joinActivity = async (userID, activityID) => {
   try {
-    const [result] = await db.query(
+    // 先检查活动是否存在且未过截止日期
+    const [activities] = await db.query(
+      "SELECT EndTime FROM Activities WHERE ActivityID = ?",
+      [activityID]
+    );
+    console.log("activities", activities);
+    if (activities.length === 0 || new Date() > new Date(activities[0].EndTime)) {
+      return { success: false, message: 'Activity is closed or does not exist' };
+    }
+
+    // 尝试报名活动
+    await db.query(
       "INSERT INTO UserActivities (UserID, ActivityID) VALUES (?, ?)",
       [userID, activityID]
     );
-
-    return result.affectedRows > 0;
+    return { success: true, message: 'Successfully registered for the activity' };
   } catch (error) {
     console.error("Error in UserModel.joinActivity:", error);
+    if (error.code === 'ER_DUP_ENTRY') {
+      return { success: false, message: 'You have already registered for this activity' };
+    }
     throw error;
   }
 };
