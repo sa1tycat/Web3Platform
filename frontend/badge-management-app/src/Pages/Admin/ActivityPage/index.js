@@ -1,21 +1,38 @@
 import React, { useState, useEffect } from 'react';
-import { Card, Button, Row, Col } from 'antd';
+import { Card, Button, Row, Col, Modal } from 'antd';
 import moment from 'moment'; // 用于格式化日期
 import { useNavigate } from 'react-router-dom';
 import { getActivity } from '../../../API/getActivity';
 import DeleteActivityButton from './DeleteActivityButton'
+import CreateActivityForm from './CreateActivityForm'; // 根据实际路径调整
+
 import { Spin } from 'antd';
 
 
 const ActivityPage = () => {
   const [activities, setActivities] = useState([]);
   const navigate = useNavigate();
+  const [isModalVisible, setIsModalVisible] = useState(false); // 控制 Modal 显示的状态
+
 
   useEffect(() => {
     getActivity().then(activitiesArray => {
       setActivities(activitiesArray); // 使用返回的数组更新状态
     });
   }, []);
+
+  const showModal = () => {
+    setIsModalVisible(true);
+  };
+
+  const handleOk = () => {
+    setIsModalVisible(false);
+  };
+
+  const handleCancel = () => {
+    setIsModalVisible(false);
+  };
+
 
   const handleNavigate = (activityId) => {
     // 使用activityId进行动态路由导航
@@ -36,6 +53,11 @@ const ActivityPage = () => {
 
 
   return (
+    <>
+    <Button type="primary" onClick={showModal}>创建新活动</Button>
+      <Modal title="创建新活动" visible={isModalVisible} onOk={handleOk} onCancel={handleCancel} footer={null}>
+        <CreateActivityForm onClose={handleCancel} />
+      </Modal>
     <Row gutter={[16, 16]} justify="start" align="stretch"> {/* 添加 align 属性 */}
       {activities.length > 0 ? activities.map((activity) => (
         <Col key={activity.ActivityID} xs={24} sm={12} lg={8} xl={6}>
@@ -66,6 +88,7 @@ const ActivityPage = () => {
       )
       }
     </Row>
+    </>
   );
 };
 
