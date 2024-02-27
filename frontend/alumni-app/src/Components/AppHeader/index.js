@@ -9,7 +9,7 @@ function AppHeader() {
         width={40}
         src="https://www.tjut.edu.cn/__local/A/17/99/4C114284E3EF002244B95EACC3C_6D74E2F8_1178D.jpg"
       ></Image>
-      <Typography.Title>校友页面</Typography.Title>
+      <Typography.Title>学生页面</Typography.Title>
       <Space>
         <Badge>
           <MailOutlined

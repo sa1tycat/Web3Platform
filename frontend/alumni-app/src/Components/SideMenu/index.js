@@ -40,8 +40,8 @@ import {
               icon: <ShopOutlined />,
             },
             {
-              label: "AI(beta)",
-              key: "/alumni/chatbot",
+              label: "活动详情",
+              key: "/alumni/view-activities",
               icon: <RobotOutlined />,
             },
             {

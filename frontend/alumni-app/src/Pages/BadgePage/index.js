@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Card, Row, Col } from 'antd';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import getBadges from '../../API/getBadges';
-import UserIDModal from './UserIDModal';
+import UserIDModal from '../../Components/UserIDModal';
 
 const BadgesPage = () => {
   const [badges, setBadges] = useState([]);
