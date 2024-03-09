@@ -6,6 +6,7 @@ const alumniRoutes = require('./src/api/alumniRoutes');
 const activityRoutes = require('./src/api/activityRoutes');
 const adminRoutes = require('./src/api/adminRoutes');
 const fileRoutes = require('./src/api/fileRoutes');
+const authRoutes = require('./src/api/authRoutes')
 require('dotenv').config(); // 加载环境变量
 
 app.use(express.json()); // 用于解析JSON格式的请求体
@@ -32,6 +33,9 @@ app.use('/api/activity', activityRoutes);
 
 // 管理员相关路由
 app.use('/api/admin', adminRoutes);
+
+// 认证相关路由
+app.use('/api/auth', authRoutes);
 
 // 错误处理
 app.use((err, req, res, next) => {
