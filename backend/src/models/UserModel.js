@@ -99,10 +99,19 @@ const findUsersByActivityID = async (activityID) => {
   return users;
 };
 
+// 新增根据address查询用户ID
+const findUserIdByAddress = async (address) => {
+  const [rows] = await db.query(`
+    SELECT UserID FROM Users WHERE Address = ?
+  `, [address]);
+  return rows[0] ? rows[0].UserID : null;
+};
+
 module.exports = {
   getUserNameByID,
   bindStudentId,
   viewBadges,
   joinActivity,
   findUsersByActivityID,
+  findUserIdByAddress,
 };

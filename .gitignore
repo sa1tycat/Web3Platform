@@ -1,5 +1,6 @@
 .DS_Store
 .env
+private.pem
 backend/files/
 backend/files/jsons/metadata-1.json
 backend/files/jsons/metadata-2.json
