@@ -33,8 +33,9 @@ const verifySignatureAndGenerateJWT = async (loginID, signature, address) => {
   }
 
   // 查找用户ID
-  const userID = await UserModel.findUserIdByAddress(address);
-  console.log("UserID: ", userID);
+  const user = await UserModel.findUserByAddress(address);
+  const userID = user.UserID;
+  console.log("User: ", user);
 
   if (userID == null) {
     return { success: false, message: 'User with such address does not exist.' }
@@ -45,7 +46,7 @@ const verifySignatureAndGenerateJWT = async (loginID, signature, address) => {
   const keyPath = process.env.PRIVATE_KEY_PATH;
   const secretKey = fs.readFileSync(keyPath, 'utf8');
   // TODO: jwt字段设置
-  const token = jwt.sign({ address }, secretKey, { expiresIn: '1h', algorithm: 'RS256' });
+  const token = jwt.sign({ userID, name: user.Name, studentID: user.StudentID, DID: user.DID, address }, secretKey, { expiresIn: '1h', algorithm: 'RS256' });
   
   // 标记为已使用
   await LoginModel.markLoginAsUsed(loginID, userID);

@@ -91,7 +91,6 @@ const joinActivity = async (userID, activityID) => {
 
 // 根据活动 ID 查找用户
 const findUsersByActivityID = async (activityID) => {
-  // 临时增加了 Address 字段，后期应该改成通过 DID 智能合约查找
   const [users] = await db.query(
     "SELECT u.UserID AS userID, u.Name AS name, u.StudentID AS studentID, u.DID, u.Address AS address FROM Users u JOIN UserActivities ua ON u.UserID = ua.UserID WHERE ua.ActivityID = ?",
     [activityID]
@@ -100,11 +99,11 @@ const findUsersByActivityID = async (activityID) => {
 };
 
 // 新增根据address查询用户ID
-const findUserIdByAddress = async (address) => {
+const findUserByAddress = async (address) => {
   const [rows] = await db.query(`
-    SELECT UserID FROM Users WHERE Address = ?
+    SELECT * FROM Users WHERE Address = ?
   `, [address]);
-  return rows[0] ? rows[0].UserID : null;
+  return rows[0];
 };
 
 module.exports = {
@@ -113,5 +112,5 @@ module.exports = {
   viewBadges,
   joinActivity,
   findUsersByActivityID,
-  findUserIdByAddress,
+  findUserByAddress,
 };
