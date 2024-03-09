@@ -23,16 +23,16 @@ const requestLoginMessage = async (req, res) => {
 };
 
 // 用户签名验证API的控制器方法
-// FIXME: 永远返回成功的错误
 const verifySignature = async (req, res) => {
   try {
     const { loginID, signature, address } = req.body;
-    const token = await authService.verifySignatureAndGenerateJWT(loginID, signature, address);
-
+    const { success, jwt, message } = 
+      await authService.verifySignatureAndGenerateJWT(loginID, signature, address);
+    
     res.json({
-      success: true,
-      jwt: token,
-      message: 'Signature verified successfully.',
+      success,
+      jwt,
+      message,
     });
   } catch (error) {
     console.error('Error in verifySignature:', error);
