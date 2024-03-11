@@ -106,6 +106,34 @@ const findUserByAddress = async (address) => {
   return rows[0];
 };
 
+// 检查studentID、DID和address是否被注册
+const checkUserExists = async (studentID, DID, address) => {
+  try {
+    const [rows] = await db.query(
+      `SELECT COUNT(*) AS count FROM Users WHERE studentID = ? OR DID = ? OR address = ?`,
+      [studentID, DID, address]
+    );
+    return rows[0].count > 0;
+  } catch (error) {
+    console.error('Error in checkUserExists:', error);
+    throw error; // 抛出错误，以便上层处理
+  }
+};
+
+// 创建用户
+const createUser = async (name, studentID, DID, address) => {
+  try {
+    const [result] = await db.query(
+      `INSERT INTO Users (name, studentID, DID, address) VALUES (?, ?, ?, ?)`,
+      [name, studentID, DID, address]
+    );
+    return result.insertId; // 返回新创建的用户ID
+  } catch (error) {
+    console.error('Error in createUser:', error);
+    throw error; // 抛出错误，以便上层处理
+  }
+};
+
 module.exports = {
   getUserNameByID,
   bindStudentId,
@@ -113,4 +141,6 @@ module.exports = {
   joinActivity,
   findUsersByActivityID,
   findUserByAddress,
+  checkUserExists,
+  createUser,
 };

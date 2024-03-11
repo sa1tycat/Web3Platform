@@ -41,11 +41,9 @@ const verifySignatureAndGenerateJWT = async (loginID, signature, address) => {
     return { success: false, message: 'User with such address does not exist.' }
   }
 
-
   // 签名验证通过，生成JWT
   const keyPath = process.env.PRIVATE_KEY_PATH;
   const secretKey = fs.readFileSync(keyPath, 'utf8');
-  // TODO: jwt字段设置
   const token = jwt.sign({ userID, name: user.Name, studentID: user.StudentID, DID: user.DID, address }, secretKey, { expiresIn: '1h', algorithm: 'RS256' });
   
   // 标记为已使用
