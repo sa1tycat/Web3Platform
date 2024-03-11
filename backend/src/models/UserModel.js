@@ -110,7 +110,7 @@ const findUserByAddress = async (address) => {
 const checkUserExists = async (studentID, DID, address) => {
   try {
     const [rows] = await db.query(
-      `SELECT COUNT(*) AS count FROM Users WHERE studentID = ? OR DID = ? OR address = ?`,
+      `SELECT COUNT(*) AS count FROM Users WHERE StudentID = ? OR DID = ? OR Address = ?`,
       [studentID, DID, address]
     );
     return rows[0].count > 0;
@@ -124,7 +124,7 @@ const checkUserExists = async (studentID, DID, address) => {
 const createUser = async (name, studentID, DID, address) => {
   try {
     const [result] = await db.query(
-      `INSERT INTO Users (name, studentID, DID, address) VALUES (?, ?, ?, ?)`,
+      `INSERT INTO Users (Name, StudentID, DID, Address) VALUES (?, ?, ?, ?)`,
       [name, studentID, DID, address]
     );
     return result.insertId; // 返回新创建的用户ID

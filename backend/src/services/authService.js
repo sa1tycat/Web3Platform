@@ -9,13 +9,15 @@ const requestLoginMessageService = async () => {
     return { loginID, msg, expiresIn };
 };
 
-/**
- * 验证签名并生成JWT
- * @param {string} loginID - 登录请求的ID
- * @param {string} signature - 用户的签名
- * @param {string} userAddress - 用户的以太坊地址
- * @returns {Promise<{success: boolean, jwt?: string, message: string}>}
- */
+// 生成JWT
+const generateJWT =  (userID, name, studentID, DID, address) => {
+  const keyPath = process.env.PRIVATE_KEY_PATH;
+  const secretKey = fs.readFileSync(keyPath, 'utf8');
+  const token = jwt.sign({ userID, name, studentID, DID, address }, secretKey, { expiresIn: '1h', algorithm: 'RS256' });
+  return token;
+};
+
+// 验证签名
 const verifySignatureAndGenerateJWT = async (loginID, signature, address) => {
   // 先从数据库中查找对应的登录请求和消息（Model层已经验证是否过期）
   const loginRequest = await LoginModel.findLoginRequestById(loginID);
@@ -42,9 +44,7 @@ const verifySignatureAndGenerateJWT = async (loginID, signature, address) => {
   }
 
   // 签名验证通过，生成JWT
-  const keyPath = process.env.PRIVATE_KEY_PATH;
-  const secretKey = fs.readFileSync(keyPath, 'utf8');
-  const token = jwt.sign({ userID, name: user.Name, studentID: user.StudentID, DID: user.DID, address }, secretKey, { expiresIn: '1h', algorithm: 'RS256' });
+  token = generateJWT(user.UserID, user.Name, user.StudentID, user.DID, address);
   
   // 标记为已使用
   await LoginModel.markLoginAsUsed(loginID, userID);
@@ -52,8 +52,30 @@ const verifySignatureAndGenerateJWT = async (loginID, signature, address) => {
   return { success: true, jwt: token, message: 'Signature verified successfully.' };
 };
 
+// 注册
+const register = async (name, studentID, DID, address, signature) => {
+  // 构造被签名的消息
+  const msg = `${name}|${studentID}|${DID}|${address}`;
+
+  const isValid = cryptoUtils.verifySignature(msg, signature, address);
+  if (!isValid) {
+    return { success: false, message: 'Signature verification failed.' };
+  }
+
+  const userExists = await UserModel.checkUserExists(studentID, DID, address);
+  console.log("userEx:", userExists);
+  if (userExists) {
+    return { success: false, message: 'User has existed.' };
+  }
+
+  const userID = await UserModel.createUser(name, studentID, DID, address);
+  const token = generateJWT(userID, name, studentID, DID, address);
+
+  return { success: true, jwt: token, message: 'Registered successfully.' };
+}
 
 module.exports = {
     requestLoginMessageService,
     verifySignatureAndGenerateJWT,
+    register,
 };

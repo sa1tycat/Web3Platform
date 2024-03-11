@@ -43,8 +43,28 @@ const verifySignature = async (req, res) => {
   }
 };
 
+const register = async (req, res) => {
+  try {
+    const { name, studentID, DID, address, signature } = req.body;
+    const { success, jwt, message } = 
+      await authService.register(name, studentID, DID, address, signature);
+    res.json({
+      success,
+      jwt,
+      message,
+    });
+  } catch (error) {
+    console.error('Error in registration:', error);
+    res.status(400).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
 
 module.exports = {
   requestLoginMessage,
   verifySignature,
+  register,
 };

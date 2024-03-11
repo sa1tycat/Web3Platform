@@ -22,6 +22,7 @@ const verifySignature = (message, signature, address) => {
     );
     const addressBuffer = ethUtil.publicToAddress(publicKey);
     const recoveredAddress = ethUtil.bufferToHex(addressBuffer);
+    console.log("recov:", recoveredAddress);
     return address.toLowerCase() === recoveredAddress.toLowerCase();
   } catch (error) {
     console.error("Error verifying signature:", error);

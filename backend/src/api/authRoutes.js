@@ -8,4 +8,7 @@ router.get('/login/request-message', authController.requestLoginMessage);
 // POST方法验证用户签名
 router.post('/login/verify-signature', authController.verifySignature);
 
+//
+router.post('/register', authController.register);
+
 module.exports = router;
