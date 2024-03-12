@@ -1,48 +1,57 @@
 import React, { useState, useEffect } from 'react';
-import { Card, Row, Col } from 'antd';
-import { useNavigate, useSearchParams } from 'react-router-dom';
-import UserIDModal from '../../Components/UserIDModal';
+import { Card, Row, Col, Spin, message, Button } from 'antd';
+import { useUser } from '../../contexts/UserContext'; // 确保路径正确
 import getActivity from '../../API/getActivity'; // 确保路径正确
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const ActivityPage = () => {
-  const [activities, setActivities] = useState([]); // 用于存储活动信息
-  const [isModalVisible, setIsModalVisible] = useState(false); // 控制模态框的显示
+  const [activities, setActivities] = useState([]);
+  const { user } = useUser(); // 使用 useUser 获取用户信息
   const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
-  const userID = searchParams.get('userID');
 
   useEffect(() => {
-    // 页面加载时，如果没有 userID，则显示模态框
-    if (!userID) {
-      setIsModalVisible(true);
+    if (user && user.userID) {
+      fetchActivities(user.userID);
     } else {
-      // 如果有 userID，则获取活动信息
-      fetchActivities(userID);
+      message.warning('请先登录', 5);
+      // 提示后也提供一个登录按钮
     }
-  }, [userID]);
+  }, [user]);
 
-  // 从后端获取活动信息
-  const fetchActivities = (userID) => {
-    console.log(`Fetching badges for userID: ${userID}`);
-    getActivity(userID).then(data => {
-      if (data && data.success) {
-        setActivities(data.activities);
+  const fetchActivities = async (userID) => {
+    const data = await getActivity(userID); // 假设getActivity是异步的
+    if (data && data.success) {
+      setActivities(data.activities);
+    } else {
+      console.error(data.message || "Failed to fetch activities.");
+    }
+  };
+
+  const handleJoinActivity = async (activityID) => {
+    try {
+      const response = await axios.post('https://api.campusblock.space/api/alumni/join-activity', {
+        userID: user.userID,
+        activityID,
+      });
+
+      if (response.data.success) {
+        message.success(response.data.message);
+        // 更新活动状态为已注册
+        setActivities(activities.map(activity =>
+          activity.ActivityID === activityID ? { ...activity, isRegistered: true } : activity
+        ));
       } else {
-        // 处理没有数据的情况
-        console.error(data.message || "Failed to fetch activities.");
+        message.error(response.data.message);
       }
-    });
+    } catch (error) {
+      console.error('Failed to join activity:', error);
+      message.error('参加活动失败');
+    }
   };
 
-  // 处理模态框的确认操作
-  const handleModalOk = (inputUserID) => {
-    setIsModalVisible(false);
-    navigate(`/alumni/view-activities?userID=${inputUserID}`); // 重定向并附带用户输入的 userID
-  };
-
-  // 处理模态框的取消操作
-  const handleModalCancel = () => {
-    setIsModalVisible(false);
+  const goToLogin = () => {
+    navigate('/alumni');
   };
 
   const cardStyle = {
@@ -50,37 +59,46 @@ const ActivityPage = () => {
     textAlign: 'center',
     minHeight: '100%',
   };
-  
+
   return (
     <>
-      <UserIDModal
-        isVisible={isModalVisible}
-        onOk={handleModalOk}
-        onCancel={handleModalCancel}
-      />
-      <Row gutter={[16, 16]} justify="start" align="stretch">
-        {activities.map((activity) => (
-          <Col key={activity.ActivityID} xs={24} sm={12} lg={8} xl={6}>
-            <Card
-              hoverable
-              style={cardStyle}
-            >
-              <Card.Meta
-                title={activity.Name}
-                description={
-                  <>
-                    <p>{activity.Description}</p>
-                    <p>开始时间: {new Date(activity.StartTime).toLocaleString()}</p>
-                    <p>结束时间: {new Date(activity.EndTime).toLocaleString()}</p>
-                    <p>{activity.isRegistered ? "已参加" : "未参加"}</p>
-                    <p>{activity.isClosed ? "已截止" : "进行中"}</p>
-                  </>
-                }
-              />
-            </Card>
-          </Col>
-        ))}
-      </Row>
+      {!user || !user.userID ? (
+        <Button type="primary" onClick={goToLogin} style={{ margin: '20px 0', display: 'block', marginLeft: 'auto', marginRight: 'auto' }}>
+          前往登录
+        </Button>
+      ) : (
+        <Row gutter={[16, 16]} justify="start" align="stretch">
+          {activities.length > 0 ? activities.map((activity) => (
+            <Col key={activity.ActivityID} xs={24} sm={12} lg={8} xl={6}>
+              <Card
+                hoverable
+                style={cardStyle}
+                actions={[
+                  <Button 
+                    disabled={activity.isRegistered || activity.isClosed} 
+                    onClick={() => handleJoinActivity(activity.ActivityID)}>
+                    {activity.isRegistered ? '已参加' : activity.isClosed ? '已截止' : '参加活动'}
+                  </Button>
+                ]}
+              >
+                <Card.Meta
+                  title={activity.Name}
+                  description={
+                    <>
+                      <p>{activity.Description}</p>
+                      <p>开始时间: {new Date(activity.StartTime).toLocaleString()}</p>
+                      <p>结束时间: {new Date(activity.EndTime).toLocaleString()}</p>
+                      <p>{activity.isClosed ? "已截止" : "进行中"}</p>
+                    </>
+                  }
+                />
+              </Card>
+            </Col>
+          )) : (
+            <Spin size="large" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }} />
+          )}
+        </Row>
+      )}
     </>
   );
 };
