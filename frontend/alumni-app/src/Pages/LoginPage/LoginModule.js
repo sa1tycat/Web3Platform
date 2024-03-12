@@ -32,8 +32,8 @@ const LoginModule = ({ loading, setLoading }) => {
       });
 
       if (verifyResponse.data.success) {
-        localStorage.setItem('jwt', verifyResponse.data.jwt);
-        login(verifyResponse.data.user);
+        const jwtToken = verifyResponse.data.jwt;
+        login(jwtToken);
         message.success('登录成功！');
         navigate('/alumni');
       } else {
