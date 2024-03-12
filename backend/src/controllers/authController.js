@@ -26,12 +26,13 @@ const requestLoginMessage = async (req, res) => {
 const verifySignature = async (req, res) => {
   try {
     const { loginID, signature, address } = req.body;
-    const { success, jwt, message } = 
+    const { success, jwt, user, message } = 
       await authService.verifySignatureAndGenerateJWT(loginID, signature, address);
     
     res.json({
       success,
       jwt,
+      user,
       message,
     });
   } catch (error) {
@@ -46,11 +47,12 @@ const verifySignature = async (req, res) => {
 const register = async (req, res) => {
   try {
     const { name, studentID, DID, address, signature } = req.body;
-    const { success, jwt, message } = 
+    const { success, jwt, user, message } = 
       await authService.register(name, studentID, DID, address, signature);
     res.json({
       success,
       jwt,
+      user,
       message,
     });
   } catch (error) {

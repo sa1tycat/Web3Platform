@@ -49,7 +49,7 @@ const verifySignatureAndGenerateJWT = async (loginID, signature, address) => {
   // 标记为已使用
   await LoginModel.markLoginAsUsed(loginID, userID);
 
-  return { success: true, jwt: token, message: 'Signature verified successfully.' };
+  return { success: true, jwt: token, user: {userID, name: user.Name, studentID: user.StudentID, DID: user.DID, address}, message: 'Signature verified successfully.' };
 };
 
 // 注册
@@ -71,7 +71,7 @@ const register = async (name, studentID, DID, address, signature) => {
   const userID = await UserModel.createUser(name, studentID, DID, address);
   const token = generateJWT(userID, name, studentID, DID, address);
 
-  return { success: true, jwt: token, message: 'Registered successfully.' };
+  return { success: true, jwt: token, user: {userID, name, studentID, DID, address}, message: 'Registered successfully.' };
 }
 
 module.exports = {
