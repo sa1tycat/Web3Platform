@@ -1,142 +1,38 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { useUser } from '../../contexts/UserContext'; // 确保路径正确
+import { Button, message } from 'antd';
 import { useNavigate } from 'react-router-dom';
-import Web3 from 'web3';
-import axios from 'axios';
-import { message, Modal, Form, Input, Button } from 'antd';
-import { useUser } from '../../contexts/UserContext';
 
-function Login() {
-  const { login } = useUser();
+const HomePage = () => {
+  const { user } = useUser(); // 从上下文中获取用户信息
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(false);
-  const [isRegisterModalVisible, setIsRegisterModalVisible] = useState(false);
-  const [web3] = useState(new Web3(window.ethereum));
 
-  const showRegisterModal = () => {
-    setIsRegisterModalVisible(true);
-  };
-
-  const handleRegister = async (values) => {
-    setIsRegisterModalVisible(false);
-    setLoading(true);
-    try {
-      const accounts = await web3.eth.requestAccounts();
-      const account = accounts[0];
-      const messageToSign = `${values.name}|${values.studentID}|${values.DID}|${account}`;
-      const signature = await web3.eth.personal.sign(messageToSign, account, '');
-      const response = await axios.post('https://api.campusblock.space/api/auth/register', {
-        name: values.name,
-        studentID: values.studentID,
-        DID: values.DID,
-        address: account,
-        signature,
-      });
-
-      if (response.data.success) {
-        message.success('注册成功！');
-      } else {
-        message.error('注册失败: ' + response.data.message);
-      }
-    } catch (error) {
-      console.error('注册失败:', error);
-      message.error(error.message || '注册过程中出现错误');
+  // 如果用户信息不存在或者name为空，提示用户登录
+  React.useEffect(() => {
+    if (!user || !user.name) {
+      // 使用Ant Design的message组件显示提示信息
+      message.warning('请先登录', 5);
+      // 也可以选择在这里直接导航到登录页
+      // navigate('/login');
     }
-    setLoading(false);
-  };
+  }, [user, navigate]);
 
-  const handleCancelRegister = () => {
-    setIsRegisterModalVisible(false);
-  };
-
-  // 现有的登录逻辑保持不变...
-
-   // 确保MetaMask钱包可用
-   if (!window.ethereum) {
-    message.error('请安装MetaMask!');
-    return;
-  }
-
-  // 初始化Web3
-
-  const handleLogin = async () => {
-    setLoading(true);
-    try {
-      // 请求用户授权连接MetaMask钱包
-      const accounts = await web3.eth.requestAccounts();
-      const account = accounts[0];
-      console.log('用户账户:', account);
-
-      // 请求登录消息
-      const messageResponse = await axios.get('https://api.campusblock.space/api/auth/login/request-message');
-      console.log('登录消息响应:', messageResponse.data);
-
-      if (!messageResponse.data.success) {
-        throw new Error(messageResponse.data.message || '获取登录消息失败');
-      }
-
-      const { loginID, msg } = messageResponse.data;
-
-      // 用户使用MetaMask签名消息
-      const signature = await web3.eth.personal.sign(msg, account, '');
-      console.log('签名:', signature);
-
-      // 向后端发送签名进行验证
-      const verifyResponse = await axios.post('https://api.campusblock.space/api/auth/login/verify-signature', {
-        loginID,
-        signature,
-        address: account,
-      });
-
-      console.log('验证签名响应:', verifyResponse.data);
-
-      if (verifyResponse.data.success) {
-        const { jwt } = verifyResponse.data;
-        // 保存JWT
-        localStorage.setItem('jwt', jwt);
-        login(verifyResponse.data.user); 
-
-        message.success('登录成功！');
-        navigate('/alumni/view-badges'); // 假设登录后要跳转到的路由为 /home
-      } else {
-        throw new Error(verifyResponse.data.message || '签名验证失败');
-      }
-    } catch (error) {
-      console.error('登录失败:', error);
-      message.error(error.message || '登录过程中出现错误');
-    } finally {
-      setLoading(false);
-    }
+  const goToLogin = () => {
+    navigate('/');
   };
 
   return (
     <div>
-      <button onClick={handleLogin} disabled={loading || !window.ethereum}>
-        {loading ? '登录中...' : '通过MetaMask登录'}
-      </button>
-      <button onClick={showRegisterModal} disabled={loading || !window.ethereum}>
-        注册
-      </button>
-
-      <Modal title="注册" visible={isRegisterModalVisible} onCancel={handleCancelRegister} footer={null}>
-        <Form onFinish={handleRegister}>
-          <Form.Item name="name" rules={[{ required: true, message: '请输入姓名!' }]}>
-            <Input placeholder="姓名" />
-          </Form.Item>
-          <Form.Item name="studentID" rules={[{ required: true, message: '请输入学号!' }]}>
-            <Input placeholder="学号" />
-          </Form.Item>
-          <Form.Item name="DID" rules={[{ required: true, message: '请输入自定义DID!' }]}>
-            <Input placeholder="自定义DID" />
-          </Form.Item>
-          <Form.Item>
-            <Button type="primary" htmlType="submit">
-              提交注册
-            </Button>
-          </Form.Item>
-        </Form>
-      </Modal>
+      {user && user.name ? (
+        <h1>欢迎你，{user.name}</h1> // 显示欢迎信息和用户的名字
+      ) : (
+        <>
+          <h1>欢迎来到我们的网站</h1> 
+          <Button type="primary" onClick={goToLogin}>前往登录</Button>
+        </>
+      )}
     </div>
   );
-}
+};
 
-export default Login;
+export default HomePage;

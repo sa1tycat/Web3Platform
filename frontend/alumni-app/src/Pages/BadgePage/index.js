@@ -31,7 +31,7 @@ const BadgesPage = () => {
 
   const goToLogin = () => {
     // 导航到登录页面
-    navigate('/alumni');
+    navigate('/');
   };
 
   const cardStyle = {

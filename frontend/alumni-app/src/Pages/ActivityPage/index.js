@@ -51,7 +51,7 @@ const ActivityPage = () => {
   };
 
   const goToLogin = () => {
-    navigate('/alumni');
+    navigate('/');
   };
 
   const cardStyle = {
