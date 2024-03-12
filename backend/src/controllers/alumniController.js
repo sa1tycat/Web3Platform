@@ -39,7 +39,7 @@ const viewBadges = async (req, res) => {
 // 查看活动
 const viewActivities = async (req, res) => {
   try {
-    const userID = req.query; // 获取userID
+    const userID = parseInt(req.query.userID); // 获取userID并转换为整数
     const activities = await activityService.viewActivitiesWithStatus(userID);
 
     res.json({

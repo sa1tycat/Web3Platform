@@ -25,7 +25,8 @@ const viewActivitiesWithStatus = async (userID) => {
       const isRegistered = await activityModel.isUserRegisteredForActivity(userID, activity.ActivityID);
       activity.isRegistered = isRegistered;
     }
-
+    console.log("userID: ", userID);
+    // console.log("activities: ", activities);
     return activities;
   } catch (error) {
     console.error('Error in activityService.viewActivitiesWithStatus:', error);
