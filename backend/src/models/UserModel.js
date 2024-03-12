@@ -134,6 +134,19 @@ const createUser = async (name, studentID, DID, address) => {
   }
 };
 
+// 获取所有用户
+const getAllUsers = async () => {
+  try {
+    const [users] = await db.query(
+      "SELECT UserID AS userID, Name AS name, StudentID AS studentID, DID, Address AS address FROM Users"
+    );
+    return users;
+  } catch (error) {
+    console.error('Error in getAllUsers:', error);
+    throw error; // 抛出错误，以便上层处理
+  }
+}
+
 module.exports = {
   getUserNameByID,
   bindStudentId,
@@ -143,4 +156,5 @@ module.exports = {
   findUserByAddress,
   checkUserExists,
   createUser,
+  getAllUsers,
 };

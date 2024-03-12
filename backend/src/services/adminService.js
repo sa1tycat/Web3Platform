@@ -312,6 +312,25 @@ const distributeBadges = async (distributions) => {
   }
 }
 
+// 获取用户列表
+const getAllUsers = async () => {
+  try {
+    const users = await UserModel.getAllUsers();
+    console.log("users: ", users);
+    return {
+      success: true,
+      users,
+      message: 'User list retrieved successfully',
+    };
+  } catch (error) {
+    return {
+      success: false,
+      message: 'Failed to get user list',
+      error: error.message,
+    };
+  }
+}
+
 module.exports = {
   createActivity,
   updateActivity,
@@ -320,4 +339,5 @@ module.exports = {
   createBadges,
   updateBadgeTkID,
   distributeBadges,
+  getAllUsers,
 };

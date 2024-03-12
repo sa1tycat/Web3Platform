@@ -94,6 +94,17 @@ const distributeBadges = async (req, res) => {
   }
 };
 
+
+const getAllUsers = async (req, res) => {
+  try {
+    const result = await adminService.getAllUsers();
+    console.log("result: ", result);
+    res.json(result);
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+}
+
 module.exports = {
   createActivity,
   updateActivity,
@@ -102,4 +113,5 @@ module.exports = {
   viewActivity,
   updateBadgeTkID,
   distributeBadges,
+  getAllUsers,
 };
