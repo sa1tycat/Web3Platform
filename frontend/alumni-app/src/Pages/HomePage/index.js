@@ -3,8 +3,10 @@ import { useNavigate } from 'react-router-dom';
 import Web3 from 'web3';
 import axios from 'axios';
 import { message, Modal, Form, Input, Button } from 'antd';
+import { useUser } from '../../contexts/UserContext';
 
 function Login() {
+  const { login } = useUser();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [isRegisterModalVisible, setIsRegisterModalVisible] = useState(false);
@@ -91,6 +93,7 @@ function Login() {
         const { jwt } = verifyResponse.data;
         // 保存JWT
         localStorage.setItem('jwt', jwt);
+        login(verifyResponse.data.user); 
 
         message.success('登录成功！');
         navigate('/alumni/view-badges'); // 假设登录后要跳转到的路由为 /home

@@ -1,42 +1,37 @@
 import React, { useState, useEffect } from 'react';
-import { Card, Row, Col } from 'antd';
-import { useNavigate, useSearchParams } from 'react-router-dom';
-import getBadges from '../../API/getBadges';
-import UserIDModal from '../../Components/UserIDModal';
+import { Card, Row, Col, Spin, message, Button } from 'antd';
+import { useUser } from '../../contexts/UserContext'; // 确保路径正确
+import getBadges from '../../API/getBadges'; // 确保路径正确
+import { useNavigate } from 'react-router-dom';
 
 const BadgesPage = () => {
   const [badges, setBadges] = useState([]);
-//   const [inputUserID, setInputUserID] = useState(''); // 用户输入的userID
-  const [isModalVisible, setIsModalVisible] = useState(false); // 控制模态框的显示
+  const { user } = useUser(); // 使用useUser获取用户信息
   const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
-  const userID = searchParams.get('userID');
 
   useEffect(() => {
-    if (!userID) {
-      setIsModalVisible(true); // 如果没有userID，则显示模态框
+    if (!user || !user.userID) {
+      // 如果没有userID，提示用户去登录
+      message.warning('请先登录', 5);
     } else {
-      fetchBadges(userID); // 如果有userID，则获取徽章数据
+      // 如果有userID，则获取徽章数据
+      fetchBadges(user.userID);
     }
-  }, [userID]);
+  }, [user]);
 
   const fetchBadges = (userID) => {
     getBadges(userID).then(data => {
       if (data && data.success) {
         setBadges(data.badges);
       } else {
-        // 处理没有数据的情况
+        console.error(data.message || "Failed to fetch badges.");
       }
     });
   };
 
-  const handleModalOk = (inputUserID) => {
-    setIsModalVisible(false);
-    navigate(`/alumni/view-badges?userID=${inputUserID}`); // 使用输入的userID重定向
-  };
-
-  const handleModalCancel = () => {
-    setIsModalVisible(false);
+  const goToLogin = () => {
+    // 导航到登录页面
+    navigate('/alumni');
   };
 
   const cardStyle = {
@@ -47,29 +42,19 @@ const BadgesPage = () => {
 
   return (
     <>
-      <UserIDModal
-        isVisible={isModalVisible}
-        onOk={handleModalOk}
-        onCancel={handleModalCancel}
-      />
       <Row gutter={[16, 16]} justify="start" align="stretch">
         {badges.length > 0 ? badges.map((badge) => (
           <Col key={badge.badgeID} xs={24} sm={12} lg={8} xl={6}>
-            <Card
-              hoverable
-              style={cardStyle}
-              cover={<img alt="badge" src={badge.imageURL} />}
-            >
-              <Card.Meta
-                title={badge.title}
-                description={badge.description}
-              />
+            <Card hoverable style={cardStyle} cover={<img alt="badge" src={badge.imageURL} />}>
+              <Card.Meta title={badge.title} description={badge.description} />
             </Card>
           </Col>
-        )) : (
-          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
-            {/* 加载指示器或空状态提示 */}
-          </div>
+        )) : user && user.userID ? (
+          <Spin size="large" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }} />
+        ) : (
+          <Button type="primary" onClick={goToLogin} style={{ display: 'block', margin: '20px auto' }}>
+            前往登录
+          </Button>
         )}
       </Row>
     </>
