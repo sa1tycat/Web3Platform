@@ -44,11 +44,11 @@ import {
               key: "/admin/stuinfo",
               icon: <UserOutlined />,
             },
-            {
-              label: "等待更新",
-              key: "/admin/update",
-              icon: <ShoppingCartOutlined />,
-            },
+            // {
+            //   label: "等待更新",
+            //   key: "/admin/update",
+            //   icon: <ShoppingCartOutlined />,
+            // },
           ]}
         ></Menu>
       </div>
