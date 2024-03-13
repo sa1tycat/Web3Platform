@@ -44,11 +44,11 @@ import {
               key: "/alumni/view-activities",
               icon: <RobotOutlined />,
             },
-            {
-              label: "等待更新",
-              key: "/alumni/update",
-              icon: <ShoppingCartOutlined />,
-            },
+            // {
+            //   label: "等待更新",
+            //   key: "/alumni/update",
+            //   icon: <ShoppingCartOutlined />,
+            // },
           ]}
         ></Menu>
       </div>
